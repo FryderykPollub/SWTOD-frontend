@@ -1,4 +1,4 @@
-import { Grid, Link, Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import React from "react";
 
 const Footer = () => {
@@ -12,7 +12,7 @@ const Footer = () => {
       >
         <Grid item>
           <Typography variant="body2">
-            Created by Małyszczuk&Markiewicz 
+            Created by M&M
           </Typography>
         </Grid>
       </Grid>

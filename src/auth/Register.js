@@ -4,16 +4,10 @@ import {
   Avatar,
   Box,
   Button,
-  Checkbox,
-  Divider,
   FormControl,
-  FormControlLabel,
-  Grid,
-  Input,
-  InputAdornment,
   InputLabel,
-  Link,
-  Paper,
+  MenuItem,
+  Select,
   Snackbar,
   TextField,
   Typography,
@@ -21,22 +15,46 @@ import {
 import React, { useEffect, useState } from "react";
 import fetchApi from "../service/FetchService";
 import { useLocalStorage } from "../util/useLocalStorage";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { useNavigate } from "react-router-dom";
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import UpperBar from "../naviBar/UpperBar";
 import { BASE_URL } from "../util/globalVars";
 
 const Register = () => {
   const [jwt, setJwt] = useLocalStorage("", "jwt");
-  const navigate = useNavigate();
-
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [degree, setDegree] = useState("");
   const [dob, setDob] = useState("");
+  const [title, setTitle] = useState("");
+  const [position, setPosition] = useState("");
   const [open, setOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
+
+  function sendRegisterRequest() {
+    const reqBody = {
+      username: email,
+      name: firstName,
+      surname: lastName,
+      dob: dob,
+      title: title,
+      positionId: position
+    }
+
+    let statusResponse;
+
+    fetchApi(BASE_URL + "/api/user/create", "POST", null, reqBody)
+      .then((res) => {
+        statusResponse = res.status;
+        return res.text();
+      })
+      .then((body) => {
+        if (statusResponse === 200) {
+          setJwt(body);
+        } else {
+          setOpen(true);
+        }
+      });
+
+  }
 
   return (
     <>
@@ -50,7 +68,7 @@ const Register = () => {
         }}
       >
         <Avatar sx={{ m: 1, bgcolor: "chocolate" }}>
-          <LockOutlinedIcon />
+          <PersonAddIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
           Dodaj użytkownika
@@ -64,20 +82,13 @@ const Register = () => {
             label="Email"
             name="email"
             type="email"
+            placeholder="example@mail.com"
             autoFocus
             onChange={(e) => setEmail(e.target.value)}
           />
           <TextField
             margin="normal"
-            fullWidth
-            name="degree"
-            label="Tytuł"
-            id="degree"
-            placeholder="dr"
-            onChange={(e) => setDegree(e.target.value)}
-          />
-          <TextField
-            margin="normal"
+            required
             fullWidth
             id="firstName"
             label="Imię"
@@ -87,6 +98,7 @@ const Register = () => {
           />
           <TextField
             margin="normal"
+            required
             fullWidth
             name="lastName"
             label="Nazwisko"
@@ -100,17 +112,40 @@ const Register = () => {
             name="dob"
             label="Data urodzenia"
             id="dob"
-            placeholder="01/01/1970"
+            placeholder="1970-01-31"
             onChange={(e) => setDob(e.target.value)}
           />
-
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            name="title"
+            label="Tytuł"
+            id="title"
+            placeholder="Doktor"
+            onChange={(e) => setTitle(e.target.value)}
+          />
+          <FormControl required fullWidth margin="normal">
+            <InputLabel>Stanowisko</InputLabel>
+            <Select
+              value={position}
+              label="Stanowisko"
+              onChange={(e) => setPosition(e.target.value)}
+              placeholder={position}
+            >
+              <MenuItem value={1}>Profesor</MenuItem>
+              <MenuItem value={2}>Profesor Uczelni</MenuItem>
+              <MenuItem value={3}>Adiunkt</MenuItem>
+              <MenuItem value={4}>Asystent</MenuItem>
+            </Select>
+          </FormControl>
           <Button
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
-            onClick={() => setOpen(true)}
+            onClick={() => sendRegisterRequest()}
           >
-            Register
+            Dodaj
           </Button>
         </Box>
       </Box>
@@ -124,8 +159,8 @@ const Register = () => {
           severity="error"
           sx={{ width: "100%" }}
         >
-          <AlertTitle>Error</AlertTitle>
-          {snackbarMessage}
+          <AlertTitle>Błąd</AlertTitle>
+          "Nie można zarejestrować użytkownika"
         </Alert>
       </Snackbar>
     </>

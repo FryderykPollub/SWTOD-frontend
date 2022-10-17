@@ -13,11 +13,12 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { useNavigate } from "react-router-dom";
 import UpperBar from "../naviBar/UpperBar";
 import { BASE_URL } from "../util/globalVars";
+import ForgotPassword from "./ForgotPassword";
 
 const Login = () => {
   const [jwt, setJwt] = useLocalStorage("", "jwt");
-  const navigate = useNavigate();
-  const [valid, setValid] = useState(false);
+  // const navigate = useNavigate();
+  // const [valid, setValid] = useState(false);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -26,13 +27,13 @@ const Login = () => {
 
   function sendLoginRequest() {
     const reqBody = {
-      email: email,
+      username: email,
       password: password,
     };
 
     let statusResponse;
 
-    fetchApi(BASE_URL + "/auth", "POST", null, reqBody)
+    fetchApi(BASE_URL + "/api/user/login", "POST", null, reqBody)
       .then((res) => {
         statusResponse = res.status;
         return res.text();
@@ -48,26 +49,26 @@ const Login = () => {
       });
   }
 
-  function checkValidation() {
-    if (jwt) {
-      fetchApi(BASE_URL + `/validate`, "GET", jwt, null)
-        .then((response) => {
-          if (response.status === 200) setValid(true);
-          else setValid(false);
-        })
-        .catch((e) => {
-          setValid(false);
-        });
-    } else setValid(false);
-  }
+  // function checkValidation() {
+  //   if (jwt) {
+  //     fetchApi(BASE_URL + `/validate`, "GET", jwt, null)
+  //       .then((response) => {
+  //         if (response.status === 200) setValid(true);
+  //         else setValid(false);
+  //       })
+  //       .catch((e) => {
+  //         setValid(false);
+  //       });
+  //   } else setValid(false);
+  // }
 
-  useEffect(() => {
-    if (valid) navigate("/profile");
-  }, [valid]);
+  // useEffect(() => {
+  //   if (valid) navigate("/profile");
+  // }, [valid]);
 
-  useEffect(() => {
-    checkValidation();
-  }, [jwt]);
+  // useEffect(() => {
+  //   checkValidation();
+  // }, [jwt]);
 
   return (
     <>
@@ -120,9 +121,7 @@ const Login = () => {
           >
             Login
           </Button>
-          <Link href="/forgor" variant="body2">
-            {"Przypomnij hasło"}
-          </Link>
+          <ForgotPassword />
         </Box>
       </Box>
     </>
