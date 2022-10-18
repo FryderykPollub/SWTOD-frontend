@@ -18,8 +18,8 @@ import ForgotPassword from "./ForgotPassword";
 const Login = () => {
   const [jwt, setJwt] = useLocalStorage("", "jwt");
   const [username, setUsername] = useLocalStorage("", "user");
-  // const navigate = useNavigate();
-  // const [valid, setValid] = useState(false);
+  const navigate = useNavigate();
+  const [valid, setValid] = useState(false);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -37,13 +37,14 @@ const Login = () => {
     fetchApi(BASE_URL + "/api/user/login", "POST", null, reqBody)
       .then((res) => {
         statusResponse = res.status;
-        return res.text();
+        return res.json();
       })
       .then((body) => {
         if (statusResponse === 200) {
           setUsername(body.username);
           setJwt(body.token);
           setColorError("primary");
+          setValid(true);
         } else {
           setErrorMessage(body);
           setColorError("error");
@@ -64,9 +65,9 @@ const Login = () => {
   //   } else setValid(false);
   // }
 
-  // useEffect(() => {
-  //   if (valid) navigate("/profile");
-  // }, [valid]);
+  useEffect(() => {
+    if (valid) navigate("/profile");
+  }, [valid]);
 
   // useEffect(() => {
   //   checkValidation();
