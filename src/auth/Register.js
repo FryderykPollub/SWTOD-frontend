@@ -41,7 +41,7 @@ const Register = () => {
 
     let statusResponse;
 
-    fetchApi(BASE_URL + "/api/user/create", "POST", null, reqBody)
+    fetchApi(BASE_URL + "/api/admin/create", "POST", null, reqBody)
       .then((res) => {
         statusResponse = res.status;
         return res.text();

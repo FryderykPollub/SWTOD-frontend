@@ -12,36 +12,45 @@ import React, { useEffect, useState } from "react";
 import fetchApi from "../service/FetchService";
 import { useLocalStorage } from "../util/useLocalStorage";
 import ChangePasswordView from "./ChangePasswordView";
-import UpdateInfo from "./UpdateInfo";
+import SelfUpdateInfo from "./SelfUpdateInfo";
 import { BASE_URL } from "../util/globalVars";
 
-const UserInfoTable = ({ id }) => {
+const UserInfoTable = () => {
   const [jwt, setJwt] = useLocalStorage("", "jwt");
+  const [username, setUsername] = useLocalStorage("", "user");
+
+  const [id, setId] = useState("");
   const [title, setTitle] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [dob, setDob] = useState("");
   const [email, setEmail] = useState("");
+  const [position, setPosition] = useState("");
   const [reload, setReload] = useState(false);
 
-  function showUserInfo() {
-    fetchApi(BASE_URL + `/user/info?id=${id}`, "GET", jwt, null)
-      .then((response) => response.json())
+  function getUser() {
+    let statusResponse;
+
+    fetchApi(BASE_URL + `/api/user?username=${username}`, "GET", jwt, null)
+      .then((response) => {
+        statusResponse = response.status;
+        if (response.status !== 200) return response.text();
+      })
       .then((body) => {
-        setTitle(body.title);
-        setFirstName(body.firstName);
-        setLastName(body.lastName);
-        setDob(body.dob);
-        setEmail(body.email);
+        if (statusResponse === 200) {
+          setId(body.id);
+          setTitle(body.title);
+          setFirstName(body.name);
+          setLastName(body.surname);
+          setDob(body.dob);
+          setEmail(body.email);
+          setPosition(body.positionName);
+        }
       });
   }
 
   useEffect(() => {
-    if (id) showUserInfo();
-  }, [id]);
-
-  useEffect(() => {
-    showUserInfo();
+    getUser();
     if (reload) setReload(false);
   }, [reload]);
 
@@ -58,6 +67,14 @@ const UserInfoTable = ({ id }) => {
                 Tytuł
               </TableCell>
               <TableCell align="right">{title}</TableCell>
+            </TableRow>
+            <TableRow
+              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+            >
+              <TableCell component="th" scope="row">
+                Stanowisko
+              </TableCell>
+              <TableCell align="right">{position}</TableCell>
             </TableRow>
             <TableRow
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -99,9 +116,8 @@ const UserInfoTable = ({ id }) => {
           <ChangePasswordView id={id} />
         </Grid>
         <Grid item>
-          <UpdateInfo
+          <SelfUpdateInfo
             id={id}
-            title={title}
             firstName={firstName}
             lastName={lastName}
             dob={dob}

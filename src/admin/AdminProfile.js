@@ -1,17 +1,15 @@
 import React from "react";
 import { Box } from "@mui/system";
 import UpperBar from "../naviBar/UpperBar";
-import SideBar from "./SideBar";
-import UserInfoTable from "./UserInfoTable";
 import { Divider } from "@mui/material";
 import { useState } from "react";
 import { useEffect } from "react";
 import fetchApi from "../service/FetchService";
 import { useLocalStorage } from "../util/useLocalStorage";
 import { BASE_URL } from "../util/globalVars";
-import UserSummary from "./UserSummary";
+import AdminSideBar from "./AdminSideBar";
 
-const Profile = () => {
+const AdminProfile = () => {
   const [jwt, setJwt] = useLocalStorage("", "jwt");
   const [userId, setUserId] = useState("");
 
@@ -35,9 +33,15 @@ const Profile = () => {
   useEffect(() => {
     // console.log(view);
     if (view === "info") {
-      setShowComponent(<UserInfoTable id={userId} />);
-    } else if (view === "summary") {
-      setShowComponent(<UserSummary id={userId} />);
+      setShowComponent(<></>);
+    } else if (view === "users") {
+      setShowComponent(<></>);
+    } else if (view === "classes") {
+      setShowComponent(<></>);
+    } else if (view === "mailBox") {
+      setShowComponent(<></>);
+    } else if (view === "semesters") {
+      setShowComponent(<></>);
     } else if (view === "groups") {
       setShowComponent(<></>);
     } else {
@@ -62,7 +66,7 @@ const Profile = () => {
             mr: 3,
           }}
         >
-          <SideBar currentView={setView} />
+          <AdminSideBar currentView={setView} />
         </Box>
         <Divider orientation="vertical" variant="middle" flexItem />
         <Box
@@ -78,4 +82,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default AdminProfile;

@@ -101,7 +101,7 @@ const HomePage = () => {
               </Grid>
               <Grid item >
                 <IconButton>
-                  <SearchIcon fontSize="large" color="secondary" />
+                  <SearchIcon fontSize="large" />
                 </IconButton>
               </Grid>
             </Grid>

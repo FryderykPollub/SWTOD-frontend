@@ -17,6 +17,7 @@ import ForgotPassword from "./ForgotPassword";
 
 const Login = () => {
   const [jwt, setJwt] = useLocalStorage("", "jwt");
+  const [username, setUsername] = useLocalStorage("", "user");
   // const navigate = useNavigate();
   // const [valid, setValid] = useState(false);
 
@@ -40,7 +41,8 @@ const Login = () => {
       })
       .then((body) => {
         if (statusResponse === 200) {
-          setJwt(body);
+          setUsername(body.username);
+          setJwt(body.token);
           setColorError("primary");
         } else {
           setErrorMessage(body);

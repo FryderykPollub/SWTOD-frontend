@@ -7,9 +7,11 @@ import Profile from "./profile/Profile";
 import { createTheme } from "@mui/material/styles";
 import { ThemeProvider } from "@emotion/react";
 import { CssBaseline } from "@mui/material";
+import AdminProfile from "./admin/AdminProfile";
 
 const chuj = createTheme({
   palette: {
+    mode: "dark",
     primary: {
       main: '#f48fb1',
       light: '#f6a5c0',
@@ -45,6 +47,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/admin/profile/" element={<AdminProfile />} />
       </Routes>
     </ThemeProvider>
   );
