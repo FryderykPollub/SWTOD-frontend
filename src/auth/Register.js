@@ -41,7 +41,7 @@ const Register = () => {
 
     let statusResponse;
 
-    fetchApi(BASE_URL + "/api/admin/create", "POST", null, reqBody)
+    fetchApi(BASE_URL + "/api/admin/create", "POST", jwt, reqBody)
       .then((res) => {
         statusResponse = res.status;
         return res.text();
@@ -131,7 +131,7 @@ const Register = () => {
               value={position}
               label="Stanowisko"
               onChange={(e) => setPosition(e.target.value)}
-              placeholder={position}
+              //placeholder={position}
             >
               <MenuItem value={1}>Profesor</MenuItem>
               <MenuItem value={2}>Profesor Uczelni</MenuItem>

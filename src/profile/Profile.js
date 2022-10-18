@@ -12,32 +12,32 @@ import { BASE_URL } from "../util/globalVars";
 import UserSummary from "./UserSummary";
 
 const Profile = () => {
-  const [jwt, setJwt] = useLocalStorage("", "jwt");
-  const [userId, setUserId] = useState("");
+  // const [jwt, setJwt] = useLocalStorage("", "jwt");
+  // const [userId, setUserId] = useState("");
 
-  const [view, setView] = useState("info");
-  const [showComponent, setShowComponent] = useState();
+   const [view, setView] = useState("info");
+   const [showComponent, setShowComponent] = useState();
 
-  function getUserId() {
-    fetchApi(BASE_URL + "/user/me", "GET", jwt, null)
-      .then((response) => {
-        return response.text();
-      })
-      .then((body) => {
-        setUserId(body);
-      });
-  }
+  // function getUserId() {
+  //   fetchApi(BASE_URL + `/api/user?username=${}`, "GET", jwt, null)
+  //     .then((response) => {
+  //       return response.text();
+  //     })
+  //     .then((body) => {
+  //       setUserId(body);
+  //     });
+  // }
 
-  useEffect(() => {
-    getUserId();
-  }, []);
+  // useEffect(() => {
+  //   getUserId();
+  // }, []);
 
   useEffect(() => {
     // console.log(view);
     if (view === "info") {
-      setShowComponent(<UserInfoTable id={userId} />);
+      setShowComponent(<UserInfoTable />);
     } else if (view === "summary") {
-      setShowComponent(<UserSummary id={userId} />);
+      setShowComponent(<UserSummary />);
     } else if (view === "groups") {
       setShowComponent(<></>);
     } else {

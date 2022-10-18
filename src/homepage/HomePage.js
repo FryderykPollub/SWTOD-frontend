@@ -19,27 +19,27 @@ import { BASE_URL } from "../util/globalVars";
 import SearchIcon from "@mui/icons-material/Search";
 
 const HomePage = () => {
-  const [jwt, setJwt] = useLocalStorage("", "jwt");
-  const navigate = useNavigate();
-  const [valid, setValid] = useState(false);
+  // const [jwt, setJwt] = useLocalStorage("", "jwt");
+  // const navigate = useNavigate();
+  // const [valid, setValid] = useState(false);
 
-  function checkValidation() {
-    if (jwt) {
-      fetchApi(BASE_URL + `/validate`, "GET", jwt, null)
-        .then((response) => {
-          // console.log(response.status);
-          if (response.status === 200) setValid(true);
-          else setValid(false);
-        })
-        .catch((e) => {
-          // setValid(false);
-        });
-    } else setValid(false);
-  }
+  // function checkValidation() {
+  //   if (jwt) {
+  //     fetchApi(BASE_URL + `/validate`, "GET", jwt, null)
+  //       .then((response) => {
+  //         // console.log(response.status);
+  //         if (response.status === 200) setValid(true);
+  //         else setValid(false);
+  //       })
+  //       .catch((e) => {
+  //         // setValid(false);
+  //       });
+  //   } else setValid(false);
+  // }
 
-  useEffect(() => {
-    checkValidation();
-  }, [jwt]);
+  // useEffect(() => {
+  //   checkValidation();
+  // }, [jwt]);
 
   return (
     <Box>

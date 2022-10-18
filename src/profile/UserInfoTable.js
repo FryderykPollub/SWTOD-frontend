@@ -34,10 +34,11 @@ const UserInfoTable = () => {
     fetchApi(BASE_URL + `/api/user?username=${username}`, "GET", jwt, null)
       .then((response) => {
         statusResponse = response.status;
-        if (response.status !== 200) return response.text();
+        return response.json();
       })
       .then((body) => {
         if (statusResponse === 200) {
+          console.log(body);
           setId(body.id);
           setTitle(body.title);
           setFirstName(body.name);
@@ -111,7 +112,7 @@ const UserInfoTable = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <Grid container justifyContent="space-around" mt={3.5}>
+      {/* <Grid container justifyContent="space-around" mt={3.5}>
         <Grid item>
           <ChangePasswordView id={id} />
         </Grid>
@@ -124,7 +125,7 @@ const UserInfoTable = () => {
             setReload={setReload}
           />
         </Grid>
-      </Grid>
+      </Grid> */}
     </>
   );
 };
