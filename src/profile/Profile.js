@@ -3,43 +3,23 @@ import { Box } from "@mui/system";
 import UpperBar from "../naviBar/UpperBar";
 import SideBar from "./SideBar";
 import UserInfoTable from "./UserInfoTable";
-import { Divider } from "@mui/material";
+import { Divider, Grid } from "@mui/material";
 import { useState } from "react";
 import { useEffect } from "react";
-import fetchApi from "../service/FetchService";
-import { useLocalStorage } from "../util/useLocalStorage";
-import { BASE_URL } from "../util/globalVars";
-import UserSummary from "./UserSummary";
+import UserSummary from "./SummaryTable/UserSummary";
+import GroupsTable from "./MyGroups/GroupsTable";
 
 const Profile = () => {
-  // const [jwt, setJwt] = useLocalStorage("", "jwt");
-  // const [userId, setUserId] = useState("");
-
-   const [view, setView] = useState("info");
-   const [showComponent, setShowComponent] = useState();
-
-  // function getUserId() {
-  //   fetchApi(BASE_URL + `/api/user?username=${}`, "GET", jwt, null)
-  //     .then((response) => {
-  //       return response.text();
-  //     })
-  //     .then((body) => {
-  //       setUserId(body);
-  //     });
-  // }
-
-  // useEffect(() => {
-  //   getUserId();
-  // }, []);
+  const [view, setView] = useState("info");
+  const [showComponent, setShowComponent] = useState();
 
   useEffect(() => {
-    // console.log(view);
     if (view === "info") {
       setShowComponent(<UserInfoTable />);
     } else if (view === "summary") {
       setShowComponent(<UserSummary />);
     } else if (view === "groups") {
-      setShowComponent(<></>);
+      setShowComponent(<GroupsTable />);
     } else {
       setShowComponent(<></>);
     }
@@ -65,14 +45,14 @@ const Profile = () => {
           <SideBar currentView={setView} />
         </Box>
         <Divider orientation="vertical" variant="middle" flexItem />
-        <Box
-          sx={{
-            width: "70%",
-            ml: 3,
-          }}
+        <Grid
+          container
+          direction="row"
+          justifyContent="center"
+          alignItems="center"
         >
           {showComponent}
-        </Box>
+        </Grid>
       </Box>
     </>
   );

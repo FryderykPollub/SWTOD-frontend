@@ -57,75 +57,66 @@ const UserInfoTable = () => {
 
   return (
     <>
-      <Typography variant="h4" sx={{ mb: 3 }}>Dane osobowe</Typography>
-      <TableContainer component={Paper}>
-        <Table sx={{ width: "100%" }} aria-label="simple table">
-          <TableBody>
-            <TableRow
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-            >
-              <TableCell component="th" scope="row">
-                Tytuł
-              </TableCell>
-              <TableCell align="right">{title}</TableCell>
-            </TableRow>
-            <TableRow
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-            >
-              <TableCell component="th" scope="row">
-                Stanowisko
-              </TableCell>
-              <TableCell align="right">{position}</TableCell>
-            </TableRow>
-            <TableRow
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-            >
-              <TableCell component="th" scope="row">
-                Imię
-              </TableCell>
-              <TableCell align="right">{firstName}</TableCell>
-            </TableRow>
-            <TableRow
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-            >
-              <TableCell component="th" scope="row">
-                Nazwisko
-              </TableCell>
-              <TableCell align="right">{lastName}</TableCell>
-            </TableRow>
-            <TableRow
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-            >
-              <TableCell component="th" scope="row">
-                Data Urodzenia
-              </TableCell>
-              <TableCell align="right">{dob}</TableCell>
-            </TableRow>
-            <TableRow
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-            >
-              <TableCell component="th" scope="row">
-                Email
-              </TableCell>
-              <TableCell align="right">{email}</TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </TableContainer>
-      {/* <Grid container justifyContent="space-around" mt={3.5}>
-        <Grid item>
-          <ChangePasswordView id={id} />
+      <Grid item width="50%">
+        <Typography variant="h4" sx={{ mb: 3 }} textAlign="center">
+          Dane osobowe
+        </Typography>
+        <TableContainer component={Paper}>
+          <Table sx={{ width: "100%" }}>
+            <TableBody>
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  Tytuł:
+                </TableCell>
+                <TableCell align="left">{title}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  Stanowisko:
+                </TableCell>
+                <TableCell align="left">{position}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  Imię:
+                </TableCell>
+                <TableCell align="left">{firstName}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  Nazwisko:
+                </TableCell>
+                <TableCell align="left">{lastName}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  Data Urodzenia:
+                </TableCell>
+                <TableCell align="left">{dob}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  Email:
+                </TableCell>
+                <TableCell align="left">{email}</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <Grid container justifyContent="space-around" mt={3.5} spacing={2}>
+          <Grid item>
+            <ChangePasswordView />
+          </Grid>
+          <Grid item>
+            <SelfUpdateInfo
+              firstName={firstName}
+              lastName={lastName}
+              dob={dob}
+              setReload={setReload}
+            />
+          </Grid>
         </Grid>
-        <Grid item>
-          <SelfUpdateInfo
-            id={id}
-            firstName={firstName}
-            lastName={lastName}
-            dob={dob}
-            setReload={setReload}
-          />
-        </Grid>
-      </Grid> */}
+      </Grid>
     </>
   );
 };

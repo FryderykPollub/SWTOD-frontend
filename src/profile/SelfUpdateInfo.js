@@ -74,14 +74,14 @@ const SelfUpdateInfo = ({
     fetchApi(BASE_URL + `/api/user/${id}/update`, "PUT", jwt, reqBody)
       .then((response) => {
         statusResponse = response.status;
-        if (response.status !== 200) return response.text();
+        return response.json();
       })
       .then((body) => {
         if (statusResponse === 200) {
           setInfoOpen(true);
           setOpen(false);
         } else {
-          setErrorMessage(body);
+          setErrorMessage(body.message);
           setErrorOpen(true);
         }
         setReload(true);
