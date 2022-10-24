@@ -8,35 +8,36 @@ import { createTheme } from "@mui/material/styles";
 import { ThemeProvider } from "@emotion/react";
 import { CssBaseline } from "@mui/material";
 import AdminProfile from "./admin/AdminProfile";
+import FileImport from "./admin/FileImport";
 
 const chuj = createTheme({
   palette: {
     mode: "dark",
     primary: {
-      main: '#f48fb1',
-      light: '#f6a5c0',
-      dark: '#aa647b',
-      contrastText: 'rgba(0,0,0,0.8)',
+      main: "#f48fb1",
+      light: "#f6a5c0",
+      dark: "#aa647b",
+      contrastText: "rgba(0,0,0,0.8)",
     },
     secondary: {
-      main: '#880e4f',
-      light: '#9f3e72',
-      dark: '#5f0937',
-      contrastText: '#ffffff',
+      main: "#880e4f",
+      light: "#9f3e72",
+      dark: "#5f0937",
+      contrastText: "#ffffff",
     },
     background: {
-      default: '#303030',
-      paper: '#373737',
+      default: "#303030",
+      paper: "#373737",
     },
     text: {
-      primary: '#fff',
-      secondary: 'rgba(255, 255, 255, 0.7)',
-      disabled: 'rgba(255,255,255,0.5)',
-      hint: 'rgba(255, 255, 255, 0.7)',
+      primary: "#fff",
+      secondary: "rgba(255, 255, 255, 0.7)",
+      disabled: "rgba(255,255,255,0.5)",
+      hint: "rgba(255, 255, 255, 0.7)",
     },
-    divider: 'rgba(0,0,0,0.12)',
+    divider: "rgba(0,0,0,0.12)",
   },
-})
+});
 
 function App() {
   return (
@@ -47,7 +48,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/admin/profile/" element={<AdminProfile />} />
+        <Route path="/admin/profile" element={<AdminProfile />} />
+        <Route path="/import" element={<FileImport />} />
       </Routes>
     </ThemeProvider>
   );
