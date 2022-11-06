@@ -11,7 +11,6 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Typography,
 } from "@mui/material";
 
 const CollapsibleRow = ({
@@ -30,6 +29,7 @@ const CollapsibleRow = ({
   lGrup,
 }) => {
   const [open, setOpen] = useState(false);
+
   return (
     <>
       <TableRow>

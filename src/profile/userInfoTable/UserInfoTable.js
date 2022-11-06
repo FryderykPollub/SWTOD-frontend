@@ -9,11 +9,11 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import fetchApi from "../service/FetchService";
-import { useLocalStorage } from "../util/useLocalStorage";
+import fetchApi from "../../service/FetchService";
+import { useLocalStorage } from "../../util/useLocalStorage";
 import ChangePasswordView from "./ChangePasswordView";
 import SelfUpdateInfo from "./SelfUpdateInfo";
-import { BASE_URL } from "../util/globalVars";
+import { BASE_URL } from "../../util/globalVars";
 
 const UserInfoTable = () => {
   const [jwt, setJwt] = useLocalStorage("", "jwt");
@@ -38,7 +38,7 @@ const UserInfoTable = () => {
       })
       .then((body) => {
         if (statusResponse === 200) {
-          console.log(body);
+          // console.log(body);
           setId(body.id);
           setTitle(body.title);
           setFirstName(body.name);
@@ -66,37 +66,41 @@ const UserInfoTable = () => {
             <TableBody>
               <TableRow>
                 <TableCell component="th" scope="row">
-                  Tytuł:
+                  <Typography sx={{ fontWeight: "bold" }}>Tytuł:</Typography>
                 </TableCell>
                 <TableCell align="left">{title}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell component="th" scope="row">
-                  Stanowisko:
+                  <Typography sx={{ fontWeight: "bold" }}>
+                    Stanowisko:
+                  </Typography>
                 </TableCell>
                 <TableCell align="left">{position}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell component="th" scope="row">
-                  Imię:
+                  <Typography sx={{ fontWeight: "bold" }}>Imię:</Typography>
                 </TableCell>
                 <TableCell align="left">{firstName}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell component="th" scope="row">
-                  Nazwisko:
+                  <Typography sx={{ fontWeight: "bold" }}>Nazwisko:</Typography>
                 </TableCell>
                 <TableCell align="left">{lastName}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell component="th" scope="row">
-                  Data Urodzenia:
+                  <Typography sx={{ fontWeight: "bold" }}>
+                    Data urodzenia:
+                  </Typography>
                 </TableCell>
                 <TableCell align="left">{dob}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell component="th" scope="row">
-                  Email:
+                  <Typography sx={{ fontWeight: "bold" }}>Email:</Typography>
                 </TableCell>
                 <TableCell align="left">{email}</TableCell>
               </TableRow>

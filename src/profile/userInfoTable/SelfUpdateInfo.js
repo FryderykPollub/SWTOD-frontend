@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocalStorage } from "../util/useLocalStorage";
+import { useLocalStorage } from "../../util/useLocalStorage";
 import {
   Alert,
   AlertTitle,
@@ -12,65 +12,81 @@ import {
   Snackbar,
   TextField,
 } from "@mui/material";
-import fetchApi from "../service/FetchService";
-import { BASE_URL, AUTH_BASE_URL } from "../util/globalVars";
+import fetchApi from "../../service/FetchService";
+import { BASE_URL } from "../../util/globalVars";
 
-const ChangePasswordView = () => {
+const SelfUpdateInfo = ({ firstName, lastName, dob, setReload }) => {
   const [jwt, setJwt] = useLocalStorage("", "jwt");
   const [username, setUsername] = useLocalStorage("", "user");
+
+  const [id, setId] = useState("");
   const [open, setOpen] = useState(false);
   const [errorOpen, setErrorOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [infoOpen, setInfoOpen] = useState(false);
-  const [helperMessage, setHelperMessage] = useState("");
-  const [oldPassword, setOldPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [againPassword, setAgainPassword] = useState("");
 
-  function changePassword() {
-    const reqBody = {
-      username: username,
-      oldPassword: oldPassword,
-      newPassword: newPassword,
-      repeatNewPassword: againPassword,
-    };
+  const [newFirstName, setNewFirstName] = useState("");
+  const [newLastName, setNewLastName] = useState("");
+  const [newDob, setNewDob] = useState("");
 
-    let responseStatus;
+  useEffect(() => {
+    setNewFirstName(firstName);
+    setNewLastName(lastName);
+    setNewDob(dob);
+  }, [firstName, lastName, dob]);
 
-    fetchApi(BASE_URL + `api/user/change-password`, "PATCH", jwt, reqBody)
+  function getUser() {
+    let statusResponse;
+
+    fetchApi(BASE_URL + `/api/user?username=${username}`, "GET", jwt, null)
       .then((response) => {
-        responseStatus = response.status;
-        if (response.status === 200) {
-          setOpen(false);
-          setInfoOpen(true);
-        }
-        return response.json();
+        statusResponse = response.status;
+        if (response.status !== 200) return response.text();
       })
       .then((body) => {
-        if (responseStatus !== 200) {
-          setErrorMessage(body.message);
+        if (statusResponse === 200) {
+          setId(body.id);
+        } else {
+          setErrorMessage("Problem ze znalezieniem nazwy użytkownika");
           setErrorOpen(true);
         }
       });
   }
 
   useEffect(() => {
-    if (
-      againPassword === newPassword &&
-      !(againPassword === "" || againPassword === null)
-    ) {
-      setHelperMessage("Correct");
-    } else if (againPassword === "" || againPassword === null) {
-      setHelperMessage("");
-    } else {
-      setHelperMessage("Doesn't match");
-    }
-  }, [againPassword, newPassword]);
+    getUser();
+  }, []);
+
+  function sendUpdateRequest() {
+    const reqBody = {
+      name: firstName,
+      surname: lastName,
+      dob: dob,
+    };
+
+    let statusResponse;
+
+    fetchApi(BASE_URL + `/api/user/${id}/update`, "PUT", jwt, reqBody)
+      .then((response) => {
+        statusResponse = response.status;
+        return response.json();
+      })
+      .then((body) => {
+        if (statusResponse === 200) {
+          setInfoOpen(true);
+          setOpen(false);
+        } else {
+          setErrorMessage(body.message);
+          setErrorOpen(true);
+        }
+        setReload(true);
+      });
+  }
 
   return (
     <>
       <Button variant="outlined" onClick={() => setOpen(true)}>
-        Zmień Hasło
+        Edytuj dane osobowe
       </Button>
       <Dialog open={open} scroll="body" onClose={() => setOpen(false)}>
         <DialogTitle textAlign="center">
@@ -81,33 +97,32 @@ const ChangePasswordView = () => {
             <TextField
               margin="normal"
               fullWidth
-              required
-              id="oldPassword"
-              label="Stare hasło"
-              name="oldPassword"
-              type="password"
-              onChange={(e) => setOldPassword(e.target.value)}
+              name="name"
+              label="Imię"
+              id="name"
+              placeholder="Jan"
+              value={newFirstName}
+              onChange={(e) => setNewFirstName(e.target.value)}
             />
             <TextField
               margin="normal"
               fullWidth
-              required
-              name="newPassword"
-              label="Nowe hasło"
-              id="newPassword"
-              type="password"
-              onChange={(e) => setNewPassword(e.target.value)}
+              name="surname"
+              label="Nazwisko"
+              id="surname"
+              placeholder="Kowalski"
+              value={newLastName}
+              onChange={(e) => setNewLastName(e.target.value)}
             />
             <TextField
               margin="normal"
               fullWidth
-              required
-              name="againPassword"
-              label="Powtórz nowe hasło"
-              id="againPassword"
-              type="password"
-              helperText={helperMessage}
-              onChange={(e) => setAgainPassword(e.target.value)}
+              name="dob"
+              label="Data urodzenia"
+              id="dob"
+              placeholder="1970-01-31"
+              value={newDob}
+              onChange={(e) => setNewDob(e.target.value)}
             />
           </Box>
         </DialogContent>
@@ -115,7 +130,7 @@ const ChangePasswordView = () => {
           <Button
             variant="contained"
             onClick={() => {
-              changePassword();
+              sendUpdateRequest();
             }}
           >
             Potwierdź
@@ -149,12 +164,12 @@ const ChangePasswordView = () => {
           severity="success"
           sx={{ width: "100%" }}
         >
-          <AlertTitle>Sukces!</AlertTitle>
-          Twoje hasło zostało zmienione!
+          <AlertTitle>Sukces</AlertTitle>
+          Twoje dane zostały zaktualizowane!
         </Alert>
       </Snackbar>
     </>
   );
 };
 
-export default ChangePasswordView;
+export default SelfUpdateInfo;

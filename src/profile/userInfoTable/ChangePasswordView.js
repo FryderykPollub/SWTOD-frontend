@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useLocalStorage } from "../util/useLocalStorage";
 import {
   Alert,
   AlertTitle,
@@ -12,86 +11,66 @@ import {
   Snackbar,
   TextField,
 } from "@mui/material";
-import fetchApi from "../service/FetchService";
-import { BASE_URL } from "../util/globalVars";
+import fetchApi from "../../service/FetchService";
+import { BASE_URL } from "../../util/globalVars";
+import { useLocalStorage } from "../../util/useLocalStorage";
 
-const SelfUpdateInfo = ({
-  firstName,
-  lastName,
-  dob,
-  setReload,
-}) => {
+const ChangePasswordView = () => {
   const [jwt, setJwt] = useLocalStorage("", "jwt");
   const [username, setUsername] = useLocalStorage("", "user");
-
-  const [id, setId] = useState("");
   const [open, setOpen] = useState(false);
   const [errorOpen, setErrorOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [infoOpen, setInfoOpen] = useState(false);
+  const [helperMessage, setHelperMessage] = useState("");
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [againPassword, setAgainPassword] = useState("");
 
-  const [newFirstName, setNewFirstName] = useState("");
-  const [newLastName, setNewLastName] = useState("");
-  const [newDob, setNewDob] = useState("");
-
-  useEffect(() => {
-    setNewFirstName(firstName);
-    setNewLastName(lastName);
-    setNewDob(dob);
-  }, [firstName, lastName, dob]);
-
-  function getUser() {
-    let statusResponse;
-
-    fetchApi(BASE_URL + `/api/user?username=${username}`, "GET", jwt, null)
-      .then((response) => {
-        statusResponse = response.status;
-        if (response.status !== 200) return response.text();
-      })
-      .then((body) => {
-        if (statusResponse === 200) {
-          setId(body.id)
-        } else {
-          setErrorMessage("Problem ze znalezieniem nazwy użytkownika");
-          setErrorOpen(true);
-        }
-      });
-  }
-
-  useEffect(() => {
-    getUser();
-  }, []);
-
-  function sendUpdateRequest() {
+  function changePassword() {
     const reqBody = {
-      name: firstName,
-      surname: lastName,
-      dob: dob,
+      username: username,
+      oldPassword: oldPassword,
+      newPassword: newPassword,
+      repeatNewPassword: againPassword,
     };
 
-    let statusResponse;
+    let responseStatus;
 
-    fetchApi(BASE_URL + `/api/user/${id}/update`, "PUT", jwt, reqBody)
+    fetchApi(BASE_URL + `api/user/change-password`, "PATCH", jwt, reqBody)
       .then((response) => {
-        statusResponse = response.status;
+        responseStatus = response.status;
+        if (response.status === 200) {
+          setOpen(false);
+          setInfoOpen(true);
+        }
         return response.json();
       })
       .then((body) => {
-        if (statusResponse === 200) {
-          setInfoOpen(true);
-          setOpen(false);
-        } else {
+        if (responseStatus !== 200) {
           setErrorMessage(body.message);
           setErrorOpen(true);
         }
-        setReload(true);
       });
   }
+
+  useEffect(() => {
+    if (
+      againPassword === newPassword &&
+      !(againPassword === "" || againPassword === null)
+    ) {
+      setHelperMessage("Correct");
+    } else if (againPassword === "" || againPassword === null) {
+      setHelperMessage("");
+    } else {
+      setHelperMessage("Doesn't match");
+    }
+  }, [againPassword, newPassword]);
 
   return (
     <>
       <Button variant="outlined" onClick={() => setOpen(true)}>
-        Edytuj dane osobowe
+        Zmień Hasło
       </Button>
       <Dialog open={open} scroll="body" onClose={() => setOpen(false)}>
         <DialogTitle textAlign="center">
@@ -102,41 +81,41 @@ const SelfUpdateInfo = ({
             <TextField
               margin="normal"
               fullWidth
-              name="name"
-              label="Imię"
-              id="name"
-              placeholder="Jan"
-              value={newFirstName}
-              onChange={(e) => setNewFirstName(e.target.value)}
+              required
+              id="oldPassword"
+              label="Stare hasło"
+              name="oldPassword"
+              type="password"
+              onChange={(e) => setOldPassword(e.target.value)}
             />
             <TextField
               margin="normal"
               fullWidth
-              name="surname"
-              label="Nazwisko"
-              id="surname"
-              placeholder="Kowalski"
-              value={newLastName}
-              onChange={(e) => setNewLastName(e.target.value)}
+              required
+              name="newPassword"
+              label="Nowe hasło"
+              id="newPassword"
+              type="password"
+              onChange={(e) => setNewPassword(e.target.value)}
             />
             <TextField
               margin="normal"
               fullWidth
-              name="dob"
-              label="Data urodzenia"
-              id="dob"
-              placeholder="1970-01-31"
-              value={newDob}
-              onChange={(e) => setNewDob(e.target.value)}
+              required
+              name="againPassword"
+              label="Powtórz nowe hasło"
+              id="againPassword"
+              type="password"
+              helperText={helperMessage}
+              onChange={(e) => setAgainPassword(e.target.value)}
             />
-
           </Box>
         </DialogContent>
         <DialogActions>
           <Button
             variant="contained"
             onClick={() => {
-              sendUpdateRequest();
+              changePassword();
             }}
           >
             Potwierdź
@@ -170,12 +149,12 @@ const SelfUpdateInfo = ({
           severity="success"
           sx={{ width: "100%" }}
         >
-          <AlertTitle>Sukces</AlertTitle>
-          Twoje dane zostały zaktualizowane!
+          <AlertTitle>Sukces!</AlertTitle>
+          Twoje hasło zostało zmienione!
         </Alert>
       </Snackbar>
     </>
   );
 };
 
-export default SelfUpdateInfo;
+export default ChangePasswordView;

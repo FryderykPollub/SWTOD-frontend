@@ -34,10 +34,11 @@ const FileImport = () => {
     fetch(BASE_URL + "/api/plan-year-subject/upload-file", {
       headers: {
         Authorization: `Bearer ${jwt}`,
-        "Content-Type": "multipart/form-data",
       },
       method: "POST",
-      body: sendFile,
+      body: {
+        "Content-Type": "multipart/form-data",
+      },
     });
   }
 

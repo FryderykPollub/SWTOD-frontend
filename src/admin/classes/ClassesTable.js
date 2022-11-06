@@ -1,4 +1,5 @@
 import {
+  Button,
   Grid,
   Paper,
   Table,
@@ -10,133 +11,137 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 import { useLocalStorage } from "../../util/useLocalStorage";
-import CollapsibleRow from "./CollapsibleRow";
-
-const UserSummary = () => {
-  const [jwt, setJwt] = useLocalStorage("", "jwt");
-  const [course, setCourse] = useState("");
-  const [faculty, setFaculty] = useState("");
-  const [degree, setDegree] = useState("");
-  const [year, setYear] = useState("");
-  const [semester, setSemester] = useState("");
-
+import AddClassButton from "./AddClassButton";
+import CollapsibleRowAdmin from "./CollapsibleRowAdmin";
+const ClassesTable = () => {
   function createData(
     przedmiot,
     kierunek,
+    rodzajSt,
     stopien,
     rokSt,
     semestr,
     isZim,
-    lTyg,
     wyklad,
     semin,
     cwicz,
     lab,
     proj,
-    lGrup
+    grWyklad,
+    grSemin,
+    grCwicz,
+    grLab,
+    grProj
   ) {
     return {
       przedmiot,
       kierunek,
+      rodzajSt,
       stopien,
       rokSt,
       semestr,
       isZim,
-      lTyg,
       wyklad,
       semin,
       cwicz,
       lab,
       proj,
-      lGrup,
+      grWyklad,
+      grSemin,
+      grCwicz,
+      grLab,
+      grProj,
     };
   }
 
   const exampleData = [
     createData(
-      "Bezpieczeństwo Informacji",
-      "IINS",
+      "Bazy danych",
+      "Informatyka",
+      "Inżynierskie Stacjonarne",
       "I",
       "II",
-      "IV",
-      false,
-      5,
+      "V",
+      true,
       3,
       null,
       null,
-      null,
-      null,
-      null
-    ),
-    createData(
-      "Bezpieczeństwo Informacji",
-      "IIST",
-      "I",
-      "II",
-      "IV",
-      false,
-      15,
-      2,
-      null,
-      null,
-      2,
-      null,
-      6
-    ),
-    createData(
-      "Bezpieczeństwo Systemów Informatycznych",
-      "IINS",
-      "I",
-      "III",
-      "V",
-      true,
-      5,
-      3,
-      null,
-      null,
-      null,
-      null,
-      null
-    ),
-    createData(
-      "Bezpieczeństwo Systemów Informatycznych",
-      "IIST",
-      "I",
-      "III",
-      "V",
-      true,
-      15,
-      2,
-      null,
-      null,
-      null,
-      null,
-      null
-    ),
-    createData(
-      "Projekt zespołowy - implementacja",
-      "IIST",
-      "I",
-      "IV",
-      "VII",
-      true,
       10,
       null,
+      1,
       null,
+      null,
+      5,
+      null
+    ),
+    createData(
+      "Bezpieczeństwo Informacji",
+      "Informatyka",
+      "Inżynierskie Niestacjonarne",
+      "I",
+      "II",
+      "IV",
+      false,
+      3,
+      null,
+      null,
+      15,
+      null,
+      2,
       null,
       null,
       3,
-      2
+      null
+    ),
+    createData(
+      "Bezpieczeństwo Systemów Informatycznych",
+      "Informatyka",
+      "Magisterskie Stacjonarne",
+      "I",
+      "III",
+      "V",
+      true,
+      3,
+      null,
+      null,
+      10,
+      null,
+      2,
+      null,
+      null,
+      4,
+      null
+    ),
+    createData(
+      "Cyberbezpieczeństwo",
+      "Informatyka",
+      "Magisterskie Niestacjonarne",
+      "I",
+      "III",
+      "V",
+      true,
+      2,
+      null,
+      15,
+      null,
+      null,
+      2,
+      null,
+      2,
+      null,
+      null
     ),
   ];
+
+  const navigate = useNavigate();
 
   return (
     <>
       <Grid item width="90%">
         <Typography variant="h4" sx={{ mb: 3 }} textAlign="center">
-          Rozliczenie godzin
+          Przedmioty
         </Typography>
         <TableContainer component={Paper}>
           <Table>
@@ -144,10 +149,13 @@ const UserSummary = () => {
               <TableRow>
                 <TableCell />
                 <TableCell>
-                  <Typography variant="h6">Przedmiot</Typography>
+                  <Typography variant="h6">Nazwa Przedmiotu</Typography>
                 </TableCell>
                 <TableCell>
                   <Typography variant="h6">Kierunek</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography variant="h6">Rodzaj studiów</Typography>
                 </TableCell>
                 <TableCell>
                   <Typography variant="h6">Stopień</Typography>
@@ -158,32 +166,45 @@ const UserSummary = () => {
                 <TableCell>
                   <Typography variant="h6">Semestr</Typography>
                 </TableCell>
+                <TableCell align="center">
+                  <Typography variant="h6">Opcje</Typography>
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {exampleData.map((element) => (
-                <CollapsibleRow
+              {exampleData.map((element, index) => (
+                <CollapsibleRowAdmin
                   przedmiot={element.przedmiot}
                   kierunek={element.kierunek}
+                  rodzajSt={element.rodzajSt}
                   stopien={element.stopien}
                   rokSt={element.rokSt}
                   semestr={element.semestr}
                   isZim={element.isZim}
-                  lTyg={element.lTyg}
                   wyklad={element.wyklad}
                   semin={element.semin}
                   cwicz={element.cwicz}
                   lab={element.lab}
                   proj={element.proj}
-                  lGrup={element.lGrup}
+                  grWyklad={element.grWyklad}
+                  grSemin={element.grSemin}
+                  grCwicz={element.grCwicz}
+                  grLab={element.grLab}
+                  grProj={element.grProj}
+                  key={index}
                 />
               ))}
             </TableBody>
           </Table>
         </TableContainer>
+        <Grid container justifyContent="space-around" mt={3.5} spacing={2}>
+          <Grid item>
+            <AddClassButton />
+          </Grid>
+        </Grid>
       </Grid>
     </>
   );
 };
 
-export default UserSummary;
+export default ClassesTable;

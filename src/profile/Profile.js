@@ -2,12 +2,13 @@ import React from "react";
 import { Box } from "@mui/system";
 import UpperBar from "../naviBar/UpperBar";
 import SideBar from "./SideBar";
-import UserInfoTable from "./UserInfoTable";
+
 import { Divider, Grid } from "@mui/material";
 import { useState } from "react";
 import { useEffect } from "react";
-import UserSummary from "./SummaryTable/UserSummary";
-import GroupsTable from "./MyGroups/GroupsTable";
+import UserSummary from "./summaryTable/UserSummary";
+import GroupsTable from "./myGroups/GroupsTable";
+import UserInfoTable from "./userInfoTable/UserInfoTable";
 
 const Profile = () => {
   const [view, setView] = useState("info");
