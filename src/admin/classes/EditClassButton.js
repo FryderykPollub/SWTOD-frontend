@@ -19,14 +19,17 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
+import fetchApi from "../../service/FetchService";
+import { BASE_URL } from "../../util/globalVars";
+import { useLocalStorage } from "../../util/useLocalStorage";
 
 const EditClassButton = ({
+  id,
+  wydzial,
   przedmiot,
   kierunek,
   rodzajSt,
-  stopien,
   rokSt,
-  semestr,
   isZim,
   wyklad,
   semin,
@@ -39,17 +42,17 @@ const EditClassButton = ({
   grLab,
   grProj,
 }) => {
+  const [jwt, setJwt] = useLocalStorage("", "jwt");
   const [open, setOpen] = useState(false);
   const [errorOpen, setErrorOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("Nieznany błąd");
   const [infoOpen, setInfoOpen] = useState(false);
 
+  const [newWydzial, setWydzial] = useState(wydzial);
   const [newPrzedmiot, setPrzedmiot] = useState(przedmiot);
   const [newKierunek, setKierunek] = useState(kierunek);
   const [newRodzajSt, setRodzajSt] = useState(rodzajSt);
-  const [newStopien, setStopien] = useState(stopien);
   const [newRokSt, setRokSt] = useState(rokSt);
-  const [newSemestr, setSemestr] = useState(semestr);
   const [newIsZim, setIsZim] = useState(isZim);
   const [newWyklad, setWyklad] = useState(wyklad);
   const [newSemin, setSemin] = useState(semin);
@@ -63,25 +66,68 @@ const EditClassButton = ({
   const [newGrProj, setGrProj] = useState(grProj);
 
   function sendUpdateRequest() {
-    const reqBody = {};
+    var typSemestru;
+
+    if (newIsZim) {
+      typSemestru = "Z";
+    } else {
+      typSemestru = "L";
+    }
+
+    const reqBody = {
+      id: null,
+      subjectId: null,
+      facultyName: newWydzial,
+      year: newRokSt,
+      fieldOfStudiesName: newKierunek,
+      typeOfStudiesName: newRodzajSt,
+      subjectName: newPrzedmiot,
+      weeksPerSemester: null,
+      lectureHoursNumberPerWeek: newWyklad,
+      exerciseHoursNumberPerWeek: newCwicz,
+      laboratoryHoursNumberPerWeek: newLab,
+      projectHoursNumberPerWeek: newProj,
+      seminaryHoursNumberPerWeek: newSemin,
+      numberOfStudents: null,
+      groupsPerLecture: newGrWyklad,
+      lectureHoursNumber: null,
+      groupsPerExercise: newGrCwicz,
+      exerciseHoursNumber: null,
+      groupsPerLaboratory: newGrLab,
+      laboratoryHoursNumber: null,
+      groupsPerProject: newGrProj,
+      projectHoursNumber: null,
+      groupsPerSeminary: newGrSemin,
+      seminaryHoursNumber: null,
+      semesterType: typSemestru,
+      hoursTotal: null,
+    };
+
+    console.log(reqBody);
 
     let statusResponse;
 
-    // fetchApi(BASE_URL + `/api/user/${id}/update`, "PUT", jwt, reqBody)
-    //   .then((response) => {
-    //     statusResponse = response.status;
-    //     return response.json();
-    //   })
-    //   .then((body) => {
-    //     if (statusResponse === 200) {
-    //       setInfoOpen(true);
-    //       setOpen(false);
-    //     } else {
-    //       setErrorMessage(body.message);
-    //       setErrorOpen(true);
-    //     }
-    //     setReload(true);
-    //   });
+    fetchApi(
+      BASE_URL + `/api/plan-year-subject/${id}/update`,
+      "PUT",
+      jwt,
+      reqBody
+    )
+      .then((response) => {
+        statusResponse = response.status;
+        return response.json();
+      })
+      .then((body) => {
+        if (statusResponse === 200) {
+          setInfoOpen(true);
+          setOpen(false);
+        } else {
+          setErrorMessage(body.message);
+          setErrorOpen(true);
+        }
+      });
+
+    setOpen(false);
   }
 
   return (
@@ -101,6 +147,15 @@ const EditClassButton = ({
         </DialogTitle>
         <DialogContent>
           <Box component="form" sx={{ m: 2, maxWidth: 600 }}>
+            <TextField
+              margin="normal"
+              fullWidth
+              name="wydzial"
+              label="Wydział"
+              id="wydzial"
+              value={newWydzial}
+              onChange={(e) => setWydzial(e.target.value)}
+            />
             <TextField
               margin="normal"
               fullWidth
@@ -138,15 +193,6 @@ const EditClassButton = ({
                 Magisterskie Niestacjonarne
               </MenuItem>
             </Select>
-            <InputLabel>Stopień studiów</InputLabel>
-            <Select
-              fullWidth
-              value={newStopien}
-              onChange={(e) => setStopien(e.target.value)}
-            >
-              <MenuItem value={"I"}>I</MenuItem>
-              <MenuItem value={"II"}>II</MenuItem>
-            </Select>
             <InputLabel>Rok studiów</InputLabel>
             <Select
               fullWidth
@@ -157,21 +203,6 @@ const EditClassButton = ({
               <MenuItem value={"II"}>II</MenuItem>
               <MenuItem value={"III"}>III</MenuItem>
               <MenuItem value={"IV"}>IV</MenuItem>
-            </Select>
-            <InputLabel>Semestr</InputLabel>
-            <Select
-              fullWidth
-              value={newSemestr}
-              onChange={(e) => setSemestr(e.target.value)}
-            >
-              <MenuItem value={"I"}>I</MenuItem>
-              <MenuItem value={"II"}>II</MenuItem>
-              <MenuItem value={"III"}>III</MenuItem>
-              <MenuItem value={"IV"}>IV</MenuItem>
-              <MenuItem value={"V"}>V</MenuItem>
-              <MenuItem value={"VI"}>VI</MenuItem>
-              <MenuItem value={"VII"}>VII</MenuItem>
-              <MenuItem value={"VIII"}>VIII</MenuItem>
             </Select>
             <InputLabel>Rodzaj semestru</InputLabel>
             <Select
@@ -333,7 +364,7 @@ const EditClassButton = ({
           <Button
             variant="contained"
             onClick={() => {
-              setOpen(false);
+              sendUpdateRequest();
             }}
           >
             Potwierdź

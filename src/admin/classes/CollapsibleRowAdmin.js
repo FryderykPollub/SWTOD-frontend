@@ -17,18 +17,19 @@ import EditClassButton from "./EditClassButton";
 import DeleteClassButton from "./DeleteClassButton";
 
 const CollapsibleRowAdmin = ({
+  id,
+  wydzial,
   przedmiot,
   kierunek,
   rodzajSt,
-  stopien,
   rokSt,
   semestr,
   isZim,
-  wyklad,
-  semin,
-  cwicz,
-  lab,
-  proj,
+  godzWyklad,
+  godzSemin,
+  godzCwicz,
+  godzLab,
+  godzProj,
   grWyklad,
   grSemin,
   grCwicz,
@@ -45,33 +46,33 @@ const CollapsibleRowAdmin = ({
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
+        <TableCell>{wydzial}</TableCell>
         <TableCell>{przedmiot}</TableCell>
         <TableCell>{kierunek}</TableCell>
         <TableCell>{rodzajSt}</TableCell>
-        <TableCell>{stopien}</TableCell>
         <TableCell>{rokSt}</TableCell>
         <TableCell>{semestr}</TableCell>
         <TableCell align="center">
           <EditClassButton
+            id={id}
+            wydzial={wydzial}
             przedmiot={przedmiot}
             kierunek={kierunek}
             rodzajSt={rodzajSt}
-            stopien={stopien}
             rokSt={rokSt}
-            semestr={semestr}
             isZim={isZim}
-            wyklad={wyklad}
-            semin={semin}
-            cwicz={cwicz}
-            lab={lab}
-            proj={proj}
+            wyklad={godzWyklad}
+            semin={godzSemin}
+            cwicz={godzCwicz}
+            lab={godzLab}
+            proj={godzProj}
             grWyklad={grWyklad}
             grSemin={grSemin}
             grCwicz={grCwicz}
             grLab={grLab}
             grProj={grProj}
           />
-          <DeleteClassButton nazwaPrzedmiotu={przedmiot} />
+          <DeleteClassButton id={id} nazwaPrzedmiotu={przedmiot} />
         </TableCell>
       </TableRow>
       <TableRow>
@@ -97,11 +98,11 @@ const CollapsibleRowAdmin = ({
                     <TableCell align="right">
                       Liczba godzin w tygodniu
                     </TableCell>
-                    <TableCell align="center">{wyklad}</TableCell>
-                    <TableCell align="center">{semin}</TableCell>
-                    <TableCell align="center">{cwicz}</TableCell>
-                    <TableCell align="center">{lab}</TableCell>
-                    <TableCell align="center">{proj}</TableCell>
+                    <TableCell align="center">{godzWyklad}</TableCell>
+                    <TableCell align="center">{godzSemin}</TableCell>
+                    <TableCell align="center">{godzCwicz}</TableCell>
+                    <TableCell align="center">{godzLab}</TableCell>
+                    <TableCell align="center">{godzProj}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell align="right">Liczba grup</TableCell>

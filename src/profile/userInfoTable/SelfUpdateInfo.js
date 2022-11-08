@@ -41,7 +41,7 @@ const SelfUpdateInfo = ({ firstName, lastName, dob, setReload }) => {
     fetchApi(BASE_URL + `/api/user?username=${username}`, "GET", jwt, null)
       .then((response) => {
         statusResponse = response.status;
-        if (response.status !== 200) return response.text();
+        return response.json();
       })
       .then((body) => {
         if (statusResponse === 200) {
@@ -59,17 +59,23 @@ const SelfUpdateInfo = ({ firstName, lastName, dob, setReload }) => {
 
   function sendUpdateRequest() {
     const reqBody = {
-      name: firstName,
-      surname: lastName,
-      dob: dob,
+      name: newFirstName,
+      surname: newLastName,
+      dob: newDob,
     };
 
     let statusResponse;
 
+    console.log(reqBody);
+
     fetchApi(BASE_URL + `/api/user/${id}/update`, "PUT", jwt, reqBody)
       .then((response) => {
         statusResponse = response.status;
-        return response.json();
+        if (response.status === 200) {
+          return response.text();
+        } else {
+          return response.json();
+        }
       })
       .then((body) => {
         if (statusResponse === 200) {

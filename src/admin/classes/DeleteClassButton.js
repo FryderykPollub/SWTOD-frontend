@@ -12,12 +12,42 @@ import {
   Snackbar,
   Tooltip,
 } from "@mui/material";
+import { useLocalStorage } from "../../util/useLocalStorage";
+import fetchApi from "../../service/FetchService";
+import { BASE_URL } from "../../util/globalVars";
 
-const DeleteClassButton = ({ nazwaPrzedmiotu }) => {
+const DeleteClassButton = ({ id, nazwaPrzedmiotu }) => {
+  const [jwt, setJwt] = useLocalStorage("", "jwt");
   const [open, setOpen] = useState(false);
   const [errorOpen, setErrorOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("Nieznany błąd");
   const [infoOpen, setInfoOpen] = useState(false);
+
+  function deleteRequest() {
+    let statusResponse;
+
+    fetchApi(
+      BASE_URL + `/api/plan-year-subject/${id}/delete`,
+      "DELETE",
+      jwt,
+      null
+    )
+      .then((response) => {
+        statusResponse = response.status;
+        return response.json();
+      })
+      .then((body) => {
+        if (statusResponse === 200) {
+          setInfoOpen(true);
+          setOpen(false);
+        } else {
+          setErrorMessage(body.message);
+          setErrorOpen(true);
+        }
+      });
+
+    setOpen(false);
+  }
 
   return (
     <>
@@ -37,7 +67,7 @@ const DeleteClassButton = ({ nazwaPrzedmiotu }) => {
           <Button
             variant="contained"
             onClick={() => {
-              setOpen(false);
+              deleteRequest();
             }}
           >
             Potwierdź
@@ -71,7 +101,7 @@ const DeleteClassButton = ({ nazwaPrzedmiotu }) => {
           sx={{ width: "100%" }}
         >
           <AlertTitle>Sukces</AlertTitle>
-          Dane przedmiotu zostały zaktualizowane!
+          Przedmiot został usunięty!
         </Alert>
       </Snackbar>
     </>

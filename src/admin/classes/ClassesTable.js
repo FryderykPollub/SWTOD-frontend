@@ -15,127 +15,33 @@ import { useNavigate } from "react-router-dom";
 import { useLocalStorage } from "../../util/useLocalStorage";
 import AddClassButton from "./AddClassButton";
 import CollapsibleRowAdmin from "./CollapsibleRowAdmin";
+import fetchApi from "../../service/FetchService";
+import { BASE_URL } from "../../util/globalVars";
+
 const ClassesTable = () => {
-  function createData(
-    przedmiot,
-    kierunek,
-    rodzajSt,
-    stopien,
-    rokSt,
-    semestr,
-    isZim,
-    wyklad,
-    semin,
-    cwicz,
-    lab,
-    proj,
-    grWyklad,
-    grSemin,
-    grCwicz,
-    grLab,
-    grProj
-  ) {
-    return {
-      przedmiot,
-      kierunek,
-      rodzajSt,
-      stopien,
-      rokSt,
-      semestr,
-      isZim,
-      wyklad,
-      semin,
-      cwicz,
-      lab,
-      proj,
-      grWyklad,
-      grSemin,
-      grCwicz,
-      grLab,
-      grProj,
-    };
+  const navigate = useNavigate();
+  const [jwt, setJwt] = useLocalStorage("", "jwt");
+  const [subjects, setSubjects] = useState([]);
+
+  function getSubjects() {
+    var responseStatus;
+
+    fetchApi(BASE_URL + "/api/plan-year-subject/all", "GET", jwt, null)
+      .then((response) => {
+        responseStatus = response.status;
+        return response.json();
+      })
+      .then((body) => {
+        if (responseStatus === 200) {
+          setSubjects(body);
+        }
+      });
   }
 
-  const exampleData = [
-    createData(
-      "Bazy danych",
-      "Informatyka",
-      "Inżynierskie Stacjonarne",
-      "I",
-      "II",
-      "V",
-      true,
-      3,
-      null,
-      null,
-      10,
-      null,
-      1,
-      null,
-      null,
-      5,
-      null
-    ),
-    createData(
-      "Bezpieczeństwo Informacji",
-      "Informatyka",
-      "Inżynierskie Niestacjonarne",
-      "I",
-      "II",
-      "IV",
-      false,
-      3,
-      null,
-      null,
-      15,
-      null,
-      2,
-      null,
-      null,
-      3,
-      null
-    ),
-    createData(
-      "Bezpieczeństwo Systemów Informatycznych",
-      "Informatyka",
-      "Magisterskie Stacjonarne",
-      "I",
-      "III",
-      "V",
-      true,
-      3,
-      null,
-      null,
-      10,
-      null,
-      2,
-      null,
-      null,
-      4,
-      null
-    ),
-    createData(
-      "Cyberbezpieczeństwo",
-      "Informatyka",
-      "Magisterskie Niestacjonarne",
-      "I",
-      "III",
-      "V",
-      true,
-      2,
-      null,
-      15,
-      null,
-      null,
-      2,
-      null,
-      2,
-      null,
-      null
-    ),
-  ];
-
-  const navigate = useNavigate();
+  useEffect(() => {
+    getSubjects();
+    console.log(subjects);
+  }, []);
 
   return (
     <>
@@ -149,6 +55,9 @@ const ClassesTable = () => {
               <TableRow>
                 <TableCell />
                 <TableCell>
+                  <Typography variant="h6">Wydział</Typography>
+                </TableCell>
+                <TableCell>
                   <Typography variant="h6">Nazwa Przedmiotu</Typography>
                 </TableCell>
                 <TableCell>
@@ -158,13 +67,7 @@ const ClassesTable = () => {
                   <Typography variant="h6">Rodzaj studiów</Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography variant="h6">Stopień</Typography>
-                </TableCell>
-                <TableCell>
                   <Typography variant="h6">Rok studiów</Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="h6">Semestr</Typography>
                 </TableCell>
                 <TableCell align="center">
                   <Typography variant="h6">Opcje</Typography>
@@ -172,26 +75,26 @@ const ClassesTable = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {exampleData.map((element, index) => (
+              {subjects.map((element) => (
                 <CollapsibleRowAdmin
-                  przedmiot={element.przedmiot}
-                  kierunek={element.kierunek}
-                  rodzajSt={element.rodzajSt}
-                  stopien={element.stopien}
-                  rokSt={element.rokSt}
-                  semestr={element.semestr}
-                  isZim={element.isZim}
-                  wyklad={element.wyklad}
-                  semin={element.semin}
-                  cwicz={element.cwicz}
-                  lab={element.lab}
-                  proj={element.proj}
-                  grWyklad={element.grWyklad}
-                  grSemin={element.grSemin}
-                  grCwicz={element.grCwicz}
-                  grLab={element.grLab}
-                  grProj={element.grProj}
-                  key={index}
+                  id={element.subjectId}
+                  wydzial={element.facultyName}
+                  przedmiot={element.subjectName}
+                  kierunek={element.fieldOfStudiesName}
+                  rodzajSt={element.typeOfStudiesName}
+                  rokSt={element.year}
+                  isZim={element.semesterType === "Z" ? true : false}
+                  godzWyklad={element.lectureHoursNumberPerWeek}
+                  godzSemin={element.seminaryHoursNumberPerWeek}
+                  godzCwicz={element.exerciseHoursNumberPerWeek}
+                  godzLab={element.laboratoryHoursNumberPerWeek}
+                  godzProj={element.projectHoursNumberPerWeek}
+                  grWyklad={element.groupsPerLecture}
+                  grSemin={element.groupsPerSeminary}
+                  grCwicz={element.groupsPerExercise}
+                  grLab={element.groupsPerLaboratory}
+                  grProj={element.groupsPerProject}
+                  key={element.subjectId}
                 />
               ))}
             </TableBody>

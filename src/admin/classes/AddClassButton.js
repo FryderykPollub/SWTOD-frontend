@@ -10,27 +10,28 @@ import {
   DialogTitle,
   Divider,
   Grid,
-  IconButton,
   InputLabel,
   MenuItem,
   Select,
   Snackbar,
   TextField,
-  Tooltip,
 } from "@mui/material";
+import fetchApi from "../../service/FetchService";
+import { BASE_URL } from "../../util/globalVars";
+import { useLocalStorage } from "../../util/useLocalStorage";
 
 const AddClassButton = () => {
+  const [jwt, setJwt] = useLocalStorage("", "jwt");
   const [open, setOpen] = useState(false);
   const [errorOpen, setErrorOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("Nieznany błąd");
   const [infoOpen, setInfoOpen] = useState(false);
 
+  const [newWydzial, setWydzial] = useState("");
   const [newPrzedmiot, setPrzedmiot] = useState("");
   const [newKierunek, setKierunek] = useState("");
   const [newRodzajSt, setRodzajSt] = useState("");
-  const [newStopien, setStopien] = useState("");
   const [newRokSt, setRokSt] = useState("");
-  const [newSemestr, setSemestr] = useState("");
   const [newIsZim, setIsZim] = useState("");
   const [newWyklad, setWyklad] = useState("");
   const [newSemin, setSemin] = useState("");
@@ -43,26 +44,64 @@ const AddClassButton = () => {
   const [newGrLab, setGrLab] = useState("");
   const [newGrProj, setGrProj] = useState("");
 
-  function sendUpdateRequest() {
-    const reqBody = {};
+  function addNewClassRequest() {
+    var typSemestru;
+
+    if (newIsZim) {
+      typSemestru = "Z";
+    } else {
+      typSemestru = "L";
+    }
+
+    const reqBody = {
+      id: null,
+      subjectId: null,
+      facultyName: newWydzial,
+      year: newRokSt,
+      fieldOfStudiesName: newKierunek,
+      typeOfStudiesName: newRodzajSt,
+      subjectName: newPrzedmiot,
+      weeksPerSemester: null,
+      lectureHoursNumberPerWeek: newWyklad,
+      exerciseHoursNumberPerWeek: newCwicz,
+      laboratoryHoursNumberPerWeek: newLab,
+      projectHoursNumberPerWeek: newProj,
+      seminaryHoursNumberPerWeek: newSemin,
+      numberOfStudents: null,
+      groupsPerLecture: newGrWyklad,
+      lectureHoursNumber: null,
+      groupsPerExercise: newGrCwicz,
+      exerciseHoursNumber: null,
+      groupsPerLaboratory: newGrLab,
+      laboratoryHoursNumber: null,
+      groupsPerProject: newGrProj,
+      projectHoursNumber: null,
+      groupsPerSeminary: newGrSemin,
+      seminaryHoursNumber: null,
+      semesterType: typSemestru,
+      hoursTotal: null,
+    };
+
+    console.log(reqBody);
 
     let statusResponse;
 
-    // fetchApi(BASE_URL + `/api/user/${id}/update`, "PUT", jwt, reqBody)
-    //   .then((response) => {
-    //     statusResponse = response.status;
-    //     return response.json();
-    //   })
-    //   .then((body) => {
-    //     if (statusResponse === 200) {
-    //       setInfoOpen(true);
-    //       setOpen(false);
-    //     } else {
-    //       setErrorMessage(body.message);
-    //       setErrorOpen(true);
-    //     }
-    //     setReload(true);
-    //   });
+    fetchApi(BASE_URL + `/api/plan-year-subject/add`, "POST", jwt, reqBody)
+      .then((response) => {
+        statusResponse = response.status;
+        return response.json();
+      })
+      .then((body) => {
+        if (statusResponse === 200) {
+          setInfoOpen(true);
+          setOpen(false);
+        } else {
+          setErrorMessage(body.message);
+          setErrorOpen(true);
+        }
+      });
+
+    setOpen(false);
   }
 
   return (
@@ -77,6 +116,15 @@ const AddClassButton = () => {
         </DialogTitle>
         <DialogContent>
           <Box component="form" sx={{ m: 2, maxWidth: 600 }}>
+            <TextField
+              margin="normal"
+              fullWidth
+              name="wydzial"
+              label="Wydział"
+              id="wydzial"
+              value={newWydzial}
+              onChange={(e) => setWydzial(e.target.value)}
+            />
             <TextField
               margin="normal"
               fullWidth
@@ -101,27 +149,10 @@ const AddClassButton = () => {
               value={newRodzajSt}
               onChange={(e) => setRodzajSt(e.target.value)}
             >
-              <MenuItem value={"Inżynierskie Stacjonarne"}>
-                Inżynierskie Stacjonarne
-              </MenuItem>
-              <MenuItem value={"Inżynierskie Niestacjonarne"}>
-                Inżynierskie Niestacjonarne
-              </MenuItem>
-              <MenuItem value={"Magisterskie Stacjonarne"}>
-                Magisterskie Stacjonarne
-              </MenuItem>
-              <MenuItem value={"Magisterskie Niestacjonarne"}>
-                Magisterskie Niestacjonarne
-              </MenuItem>
-            </Select>
-            <InputLabel>Stopień studiów</InputLabel>
-            <Select
-              fullWidth
-              value={newStopien}
-              onChange={(e) => setStopien(e.target.value)}
-            >
-              <MenuItem value={"I"}>I</MenuItem>
-              <MenuItem value={"II"}>II</MenuItem>
+              <MenuItem value={1}>Inżynierskie Stacjonarne</MenuItem>
+              <MenuItem value={2}>Inżynierskie Niestacjonarne</MenuItem>
+              <MenuItem value={2}>Magisterskie Stacjonarne</MenuItem>
+              <MenuItem value={3}>Magisterskie Niestacjonarne</MenuItem>
             </Select>
             <InputLabel>Rok studiów</InputLabel>
             <Select
@@ -129,25 +160,10 @@ const AddClassButton = () => {
               value={newRokSt}
               onChange={(e) => setRokSt(e.target.value)}
             >
-              <MenuItem value={"I"}>I</MenuItem>
-              <MenuItem value={"II"}>II</MenuItem>
-              <MenuItem value={"III"}>III</MenuItem>
-              <MenuItem value={"IV"}>IV</MenuItem>
-            </Select>
-            <InputLabel>Semestr</InputLabel>
-            <Select
-              fullWidth
-              value={newSemestr}
-              onChange={(e) => setSemestr(e.target.value)}
-            >
-              <MenuItem value={"I"}>I</MenuItem>
-              <MenuItem value={"II"}>II</MenuItem>
-              <MenuItem value={"III"}>III</MenuItem>
-              <MenuItem value={"IV"}>IV</MenuItem>
-              <MenuItem value={"V"}>V</MenuItem>
-              <MenuItem value={"VI"}>VI</MenuItem>
-              <MenuItem value={"VII"}>VII</MenuItem>
-              <MenuItem value={"VIII"}>VIII</MenuItem>
+              <MenuItem value={1}>I</MenuItem>
+              <MenuItem value={2}>II</MenuItem>
+              <MenuItem value={3}>III</MenuItem>
+              <MenuItem value={4}>IV</MenuItem>
             </Select>
             <InputLabel>Rodzaj semestru</InputLabel>
             <Select
@@ -309,7 +325,7 @@ const AddClassButton = () => {
           <Button
             variant="contained"
             onClick={() => {
-              setOpen(false);
+              addNewClassRequest();
             }}
           >
             Potwierdź
@@ -344,7 +360,7 @@ const AddClassButton = () => {
           sx={{ width: "100%" }}
         >
           <AlertTitle>Sukces</AlertTitle>
-          Dane przedmiotu zostały zaktualizowane!
+          Przedmiot został dodany!
         </Alert>
       </Snackbar>
     </>
