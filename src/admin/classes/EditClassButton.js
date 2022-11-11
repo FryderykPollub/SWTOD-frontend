@@ -75,7 +75,7 @@ const EditClassButton = ({
     }
 
     const reqBody = {
-      id: null,
+      id: id,
       subjectId: null,
       facultyName: newWydzial,
       year: newRokSt,

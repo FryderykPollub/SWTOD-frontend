@@ -17,6 +17,7 @@ import AddClassButton from "./AddClassButton";
 import CollapsibleRowAdmin from "./CollapsibleRowAdmin";
 import fetchApi from "../../service/FetchService";
 import { BASE_URL } from "../../util/globalVars";
+import DeleteAllButton from "./DeleteAllButton";
 
 const ClassesTable = () => {
   const navigate = useNavigate();
@@ -103,6 +104,9 @@ const ClassesTable = () => {
         <Grid container justifyContent="space-around" mt={3.5} spacing={2}>
           <Grid item>
             <AddClassButton />
+          </Grid>
+          <Grid item>
+            <DeleteAllButton />
           </Grid>
         </Grid>
       </Grid>

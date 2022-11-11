@@ -4,7 +4,6 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import {
   Box,
   Collapse,
-  Divider,
   IconButton,
   Table,
   TableBody,
