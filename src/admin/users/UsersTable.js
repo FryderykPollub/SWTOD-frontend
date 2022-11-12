@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import fetchApi from "../../service/FetchService";
 import { BASE_URL } from "../../util/globalVars";
 import { useLocalStorage } from "../../util/useLocalStorage";
+import AddUserButton from "./AddUserButton";
 import UserDetailsRow from "./UserDetailsRow";
 
 const UsersTable = () => {
@@ -59,13 +60,15 @@ const UsersTable = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>
+                <TableCell align="right">
                   <Typography variant="h6">Imię</Typography>
                 </TableCell>
-                <TableCell>
+                <TableCell align="right">
                   <Typography variant="h6">Nazwisko</Typography>
                 </TableCell>
-                <TableCell />
+                <TableCell align="right">
+                  <Typography variant="h6">Rola</Typography>
+                </TableCell>
                 <TableCell align="center">
                   <Typography variant="h6">Opcje</Typography>
                 </TableCell>
@@ -91,9 +94,7 @@ const UsersTable = () => {
         </TableContainer>
         <Grid container justifyContent="space-around" mt={3.5} spacing={2}>
           <Grid item>
-            <Button variant="contained" onClick={() => navigate("/register")}>
-              Dodaj nowego użytkownika
-            </Button>
+            <AddUserButton />
           </Grid>
           <Grid item>
             <Button variant="contained">Sprawdź poprawność obsady</Button>

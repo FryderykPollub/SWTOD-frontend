@@ -7,6 +7,9 @@ import {
 } from "@mui/material";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import BlockIcon from "@mui/icons-material/Block";
+import EditIcon from "@mui/icons-material/Edit";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import TextSnippetIcon from "@mui/icons-material/TextSnippet";
 import React from "react";
 
 const UserDetailsRow = ({
@@ -23,23 +26,41 @@ const UserDetailsRow = ({
   return (
     <>
       <TableRow>
-        <TableCell>{name}</TableCell>
-        <TableCell>{surname}</TableCell>
-        <TableCell>
+        <TableCell align="right">{name}</TableCell>
+        <TableCell align="right">{surname}</TableCell>
+        <TableCell align="right">
           {isAdmin ? (
-            <Typography color="lightslategray">admin</Typography>
+            <Typography color="lightslategray">administrator</Typography>
           ) : (
-            <Typography color="lightslategray">user</Typography>
+            <Typography color="lightslategray">użytkownik</Typography>
           )}
         </TableCell>
         <TableCell align="center">
           <Tooltip
-            title="Zarządzaj użytkownikiem"
+            title="Edytuj dane użytkownika"
             placement="bottom"
             enterDelay={500}
           >
             <IconButton>
-              <ManageAccountsIcon />
+              <EditIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip
+            title="Pokaż rozliczenie użytkownika"
+            placement="bottom"
+            enterDelay={500}
+          >
+            <IconButton>
+              <TextSnippetIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip
+            title="Generuj kartę obciążeń"
+            placement="bottom"
+            enterDelay={500}
+          >
+            <IconButton>
+              <FileDownloadIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title="Dezaktywuj konto" placement="bottom" enterDelay={500}>
