@@ -9,6 +9,8 @@ import AdminSideBar from "./AdminSideBar";
 import ClassesTable from "./classes/ClassesTable";
 import UserInfoTable from "../profile/userInfoTable/UserInfoTable";
 import UsersTable from "./users/UsersTable";
+import GroupsTable from "../profile/myGroups/GroupsTable";
+import SemesterTable from "./teachingStaff/SemesterTable";
 
 const AdminProfile = () => {
   const [jwt, setJwt] = useLocalStorage("", "jwt");
@@ -25,9 +27,9 @@ const AdminProfile = () => {
     } else if (view === "classes") {
       setShowComponent(<ClassesTable />);
     } else if (view === "semesters") {
-      setShowComponent(<></>);
+      setShowComponent(<SemesterTable />);
     } else if (view === "groups") {
-      setShowComponent(<></>);
+      setShowComponent(<GroupsTable />);
     } else {
       setShowComponent(<></>);
     }

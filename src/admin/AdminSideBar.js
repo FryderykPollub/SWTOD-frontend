@@ -58,7 +58,7 @@ const AdminSideBar = ({ currentView }) => {
                 <ListItemIcon>
                   <SchoolIcon />
                 </ListItemIcon>
-                <ListItemText primary="Semestry" />
+                <ListItemText primary="Obsada roku" />
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>

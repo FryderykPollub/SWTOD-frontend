@@ -1,5 +1,4 @@
 import {
-  Button,
   Grid,
   Paper,
   Table,
@@ -11,7 +10,6 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useLocalStorage } from "../../util/useLocalStorage";
 import AddClassButton from "./AddClassButton";
 import CollapsibleRowAdmin from "./CollapsibleRowAdmin";
@@ -20,7 +18,6 @@ import { BASE_URL } from "../../util/globalVars";
 import DeleteAllButton from "./DeleteAllButton";
 
 const ClassesTable = () => {
-  const navigate = useNavigate();
   const [jwt, setJwt] = useLocalStorage("", "jwt");
   const [subjects, setSubjects] = useState([]);
 
