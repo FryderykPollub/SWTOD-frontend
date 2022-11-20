@@ -14,7 +14,6 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import fetchApi from "../../service/FetchService";
 import { BASE_URL } from "../../util/globalVars";
 import { useLocalStorage } from "../../util/useLocalStorage";
@@ -22,7 +21,6 @@ import AddUserButton from "./AddUserButton";
 import UserDetailsRow from "./UserDetailsRow";
 
 const UsersTable = () => {
-  const navigate = useNavigate();
   const [jwt, setJwt] = useLocalStorage("", "jwt");
   const [users, setUsers] = useState([]);
   const [errorOpen, setErrorOpen] = useState(false);

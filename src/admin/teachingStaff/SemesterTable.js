@@ -1,5 +1,6 @@
 import {
   Grid,
+  IconButton,
   MenuItem,
   Paper,
   Select,
@@ -9,19 +10,18 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import ClassCollapsibleRow from "./ClassCollapsibleRow";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { DATA } from "./ExampleData";
+import BindClassButton from "./BindClassButton";
 
 const SemesterTable = () => {
   const [selection, setSelection] = useState(3);
   const [subjects, setSubjects] = useState(DATA);
-
-  useEffect(() => {
-    console.log(subjects);
-  });
 
   return (
     <>
@@ -50,12 +50,21 @@ const SemesterTable = () => {
               <MenuItem value={3}>{"2022/2023"}</MenuItem>
             </Select>
           </Grid>
+          <Grid item>
+            <Tooltip title="Utwórz nowy rok akademicki" enterDelay={500}>
+              <IconButton>
+                <AddCircleIcon />
+              </IconButton>
+            </Tooltip>
+          </Grid>
         </Grid>
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell />
+                <TableCell>
+                  <BindClassButton />
+                </TableCell>
                 <TableCell>
                   <Typography variant="h6">Prowadzący</Typography>
                 </TableCell>
