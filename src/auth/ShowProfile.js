@@ -3,14 +3,16 @@ import { Navigate } from "react-router-dom";
 import { useLocalStorage } from "../util/useLocalStorage";
 import fetchApi from "../service/FetchService";
 import { BASE_URL } from "../util/globalVars";
+import AdminProfile from "../admin/AdminProfile";
+import UserProfile from "../profile/UserProfile";
 
-const PrivateRoute = ({ children }) => {
+const ShowProfile = () => {
   const [jwt, setJwt] = useLocalStorage("", "jwt");
   const [valid, setValid] = useState(<></>);
 
-  function checkValidation() {
+  function checkIfAdmin() {
     if (jwt) {
-      fetchApi(BASE_URL + `/api/user/is-user`, "GET", jwt, null)
+      fetchApi(BASE_URL + `/api/admin/is-admin`, "GET", jwt, null)
         .then((response) => {
           if (response.status === 200) setValid(true);
           else setValid(false);
@@ -22,10 +24,10 @@ const PrivateRoute = ({ children }) => {
   }
 
   useEffect(() => {
-    checkValidation();
+    checkIfAdmin();
   }, []);
 
-  return valid ? children : <Navigate to="/login" />;
+  return valid ? <AdminProfile /> : <UserProfile />;
 };
 
-export default PrivateRoute;
+export default ShowProfile;

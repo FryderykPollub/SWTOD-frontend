@@ -10,7 +10,7 @@ import UserSummary from "./summaryTable/UserSummary";
 import GroupsTable from "./myGroups/GroupsTable";
 import UserInfoTable from "./userInfoTable/UserInfoTable";
 
-const Profile = () => {
+const UserProfile = () => {
   const [view, setView] = useState("info");
   const [showComponent, setShowComponent] = useState();
 
@@ -59,4 +59,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default UserProfile;

@@ -3,14 +3,15 @@ import HomePage from "./homepage/HomePage";
 import PrivateRoute from "./privateRoute/PrivateRoute";
 import Login from "./auth/Login";
 import Register from "./auth/Register";
-import Profile from "./profile/Profile";
+import UserProfile from "./profile/UserProfile";
 import { createTheme } from "@mui/material/styles";
 import { ThemeProvider } from "@emotion/react";
 import { CssBaseline } from "@mui/material";
 import AdminProfile from "./admin/AdminProfile";
 import FileImport from "./admin/FileImport";
+import ShowProfile from "./auth/ShowProfile";
 
-const chuj = createTheme({
+const customTheme = createTheme({
   palette: {
     mode: "dark",
     primary: {
@@ -41,14 +42,20 @@ const chuj = createTheme({
 
 function App() {
   return (
-    <ThemeProvider theme={chuj}>
+    <ThemeProvider theme={customTheme}>
       <CssBaseline />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/admin/profile" element={<AdminProfile />} />
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <ShowProfile />
+            </PrivateRoute>
+          }
+        />
         <Route path="/import" element={<FileImport />} />
       </Routes>
     </ThemeProvider>

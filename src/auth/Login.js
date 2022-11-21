@@ -10,7 +10,7 @@ import React, { useEffect, useState } from "react";
 import fetchApi from "../service/FetchService";
 import { useLocalStorage } from "../util/useLocalStorage";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import UpperBar from "../naviBar/UpperBar";
 import { BASE_URL } from "../util/globalVars";
 import ForgotPassword from "./ForgotPassword";
@@ -52,28 +52,30 @@ const Login = () => {
       });
   }
 
-  // function checkValidation() {
-  //   if (jwt) {
-  //     fetchApi(BASE_URL + `/validate`, "GET", jwt, null)
-  //       .then((response) => {
-  //         if (response.status === 200) setValid(true);
-  //         else setValid(false);
-  //       })
-  //       .catch((e) => {
-  //         setValid(false);
-  //       });
-  //   } else setValid(false);
-  // }
+  function checkValidation() {
+    if (jwt) {
+      fetchApi(BASE_URL + `/api/user/is-user`, "GET", jwt, null)
+        .then((response) => {
+          if (response.status === 200) setValid(true);
+          else setValid(false);
+        })
+        .catch((e) => {
+          setValid(false);
+        });
+    } else setValid(false);
+  }
 
   useEffect(() => {
     if (valid) navigate("/profile");
   }, [valid]);
 
-  // useEffect(() => {
-  //   checkValidation();
-  // }, [jwt]);
+  useEffect(() => {
+    checkValidation();
+  }, [jwt]);
 
-  return (
+  return valid ? (
+    <Navigate to="/profile" />
+  ) : (
     <>
       <UpperBar />
       <Box
