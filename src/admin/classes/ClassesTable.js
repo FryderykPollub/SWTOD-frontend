@@ -16,6 +16,7 @@ import CollapsibleRowAdmin from "./CollapsibleRowAdmin";
 import fetchApi from "../../service/FetchService";
 import { BASE_URL } from "../../util/globalVars";
 import DeleteAllButton from "./DeleteAllButton";
+import UploadFileButton from "./UploadFileButton";
 
 const ClassesTable = () => {
   const [jwt, setJwt] = useLocalStorage("", "jwt");
@@ -44,9 +45,23 @@ const ClassesTable = () => {
   return (
     <>
       <Grid item width="90%">
-        <Typography variant="h4" sx={{ mb: 3 }} textAlign="center">
-          Przedmioty
-        </Typography>
+        <Grid
+          container
+          direction="row"
+          justifyContent="center"
+          alignItems="center"
+          sx={{ mb: 3 }}
+          spacing={2}
+        >
+          <Grid item>
+            <Typography variant="h4" textAlign="center">
+              Przedmioty
+            </Typography>
+          </Grid>
+          <Grid item>
+            <UploadFileButton />
+          </Grid>
+        </Grid>
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
