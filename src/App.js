@@ -2,12 +2,9 @@ import { Route, Routes } from "react-router-dom";
 import HomePage from "./homepage/HomePage";
 import PrivateRoute from "./privateRoute/PrivateRoute";
 import Login from "./auth/Login";
-import Register from "./auth/Register";
-import UserProfile from "./profile/UserProfile";
 import { createTheme } from "@mui/material/styles";
 import { ThemeProvider } from "@emotion/react";
 import { CssBaseline } from "@mui/material";
-import AdminProfile from "./admin/AdminProfile";
 import FileImport from "./admin/FileImport";
 import ShowProfile from "./auth/ShowProfile";
 
@@ -47,7 +44,6 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
         <Route
           path="/profile"
           element={
