@@ -1,4 +1,6 @@
 import {
+  Alert,
+  AlertTitle,
   Box,
   Button,
   Dialog,
@@ -9,6 +11,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Snackbar,
   TextField,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
@@ -38,6 +41,12 @@ const AddUserButton = () => {
   const [titleHelperText, setTitleHelperText] = useState("");
   const [titleError, setTitleError] = useState(false);
 
+  const [infoOpen, setInfoOpen] = useState(false);
+  const [errorOpen, setErrorOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(
+    "Nie udało się dodać użytkownika"
+  );
+
   function sendRegisterRequest() {
     const reqBody = {
       username: email,
@@ -50,16 +59,18 @@ const AddUserButton = () => {
 
     let statusResponse;
 
-    fetchApi(BASE_URL + "/api/admin/create", "POST", jwt, reqBody)
+    fetchApi(BASE_URL + "/api/admin/create-user", "POST", jwt, reqBody)
       .then((res) => {
         statusResponse = res.status;
-        return res.text();
+        return res.json();
       })
       .then((body) => {
         if (statusResponse === 200) {
-          setJwt(body);
+          setInfoOpen(true);
         } else {
-          setOpen(true);
+          setErrorOpen(true);
+          setErrorMessage(body.message);
+          setEmailError(true);
         }
       });
   }
@@ -268,6 +279,34 @@ const AddUserButton = () => {
           <Button onClick={() => setOpen(false)}>Anuluj</Button>
         </DialogActions>
       </Dialog>
+      <Snackbar
+        open={infoOpen}
+        autoHideDuration={3000}
+        onClose={() => setInfoOpen(false)}
+      >
+        <Alert
+          onClose={() => setInfoOpen(false)}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          <AlertTitle>Sukces!</AlertTitle>
+          Nowe hasło zostało wysłane na podany mail
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={errorOpen}
+        autoHideDuration={3000}
+        onClose={() => setErrorOpen(false)}
+      >
+        <Alert
+          onClose={() => setErrorOpen(false)}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
+          <AlertTitle>Błąd!</AlertTitle>
+          {errorMessage}
+        </Alert>
+      </Snackbar>
     </>
   );
 };
