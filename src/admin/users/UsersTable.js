@@ -46,7 +46,7 @@ const UsersTable = () => {
 
   useEffect(() => {
     getUsers();
-  });
+  }, []);
 
   return (
     <>
