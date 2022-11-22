@@ -29,6 +29,14 @@ const SelfUpdateInfo = ({ firstName, lastName, dob, setReload }) => {
   const [newLastName, setNewLastName] = useState("");
   const [newDob, setNewDob] = useState("");
 
+  const [validationFlag, setValidationFlag] = useState(false);
+  const [nameHelperText, setNameHelperText] = useState("");
+  const [nameError, setNameError] = useState(false);
+  const [surnameHelperText, setSurnameHelperText] = useState("");
+  const [surnameError, setSurnameError] = useState(false);
+  const [dobHelperText, setDobHelperText] = useState("");
+  const [dobError, setDobError] = useState(false);
+
   useEffect(() => {
     setNewFirstName(firstName);
     setNewLastName(lastName);
@@ -89,6 +97,70 @@ const SelfUpdateInfo = ({ firstName, lastName, dob, setReload }) => {
       });
   }
 
+  function checkName(val) {
+    if (!val) {
+      setNameHelperText("Imię nie może być puste");
+      setNameError(true);
+    } else {
+      let regName = /^[a-zA-ZąęółśżźćńĄĘÓŁŚŻŹĆŃ ,.'-]+$/;
+      if (!regName.test(val)) {
+        setNameHelperText("Imię zawiera błąd");
+        setNameError(true);
+      } else {
+        setNameHelperText("");
+        setNameError(false);
+        setNewFirstName(val);
+      }
+    }
+  }
+
+  function checkSurname(val) {
+    if (!val) {
+      setSurnameHelperText("Nazwisko nie może być puste");
+      setSurnameError(true);
+    } else {
+      let regSurname = /^[a-zA-ZąęółśżźćńĄĘÓŁŚŻŹĆŃ ,.'-]+$/;
+      if (!regSurname.test(val)) {
+        setSurnameHelperText("Nazwisko zawiera błąd");
+        setSurnameError(true);
+      } else {
+        setSurnameHelperText("");
+        setSurnameError(false);
+        setNewLastName(val);
+      }
+    }
+  }
+
+  function checkDob(val) {
+    if (!val) {
+      setDobHelperText("");
+      setDobError(false);
+      setNewDob(val);
+    } else {
+      let regDob = /^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/;
+      if (!regDob.test(val)) {
+        setDobHelperText("Data urodzenia zawiera błąd");
+        setDobError(true);
+      } else {
+        setDobHelperText("");
+        setDobError(false);
+        setNewDob(val);
+      }
+    }
+  }
+
+  function checkValidation() {
+    if (!nameError && !surnameError && !dobError) {
+      setValidationFlag(true);
+    } else {
+      setValidationFlag(false);
+    }
+  }
+
+  useEffect(() => {
+    checkValidation();
+  }, [nameError, surnameError, dobError]);
+
   return (
     <>
       <Button variant="outlined" onClick={() => setOpen(true)}>
@@ -96,7 +168,7 @@ const SelfUpdateInfo = ({ firstName, lastName, dob, setReload }) => {
       </Button>
       <Dialog open={open} scroll="body" onClose={() => setOpen(false)}>
         <DialogTitle textAlign="center">
-          {"Edit your personal info"}
+          {"Edytuj swoje dane osobowe"}
         </DialogTitle>
         <DialogContent>
           <Box component="form" sx={{ mt: 2, maxWidth: 600 }}>
@@ -107,8 +179,9 @@ const SelfUpdateInfo = ({ firstName, lastName, dob, setReload }) => {
               label="Imię"
               id="name"
               placeholder="Jan"
-              value={newFirstName}
-              onChange={(e) => setNewFirstName(e.target.value)}
+              error={nameError}
+              helperText={nameHelperText}
+              onChange={(e) => checkName(e.target.value)}
             />
             <TextField
               margin="normal"
@@ -117,8 +190,9 @@ const SelfUpdateInfo = ({ firstName, lastName, dob, setReload }) => {
               label="Nazwisko"
               id="surname"
               placeholder="Kowalski"
-              value={newLastName}
-              onChange={(e) => setNewLastName(e.target.value)}
+              error={surnameError}
+              helperText={surnameHelperText}
+              onChange={(e) => checkSurname(e.target.value)}
             />
             <TextField
               margin="normal"
@@ -127,14 +201,16 @@ const SelfUpdateInfo = ({ firstName, lastName, dob, setReload }) => {
               label="Data urodzenia"
               id="dob"
               placeholder="1970-01-31"
-              value={newDob}
-              onChange={(e) => setNewDob(e.target.value)}
+              error={dobError}
+              helperText={dobHelperText}
+              onChange={(e) => checkDob(e.target.value)}
             />
           </Box>
         </DialogContent>
         <DialogActions>
           <Button
             variant="contained"
+            disabled={!validationFlag}
             onClick={() => {
               sendUpdateRequest();
             }}

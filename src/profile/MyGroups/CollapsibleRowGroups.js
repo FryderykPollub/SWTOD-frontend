@@ -12,10 +12,10 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import EditClassButton from "./EditClassButton";
-import DeleteClassButton from "./DeleteClassButton";
+import AcceptClassButton from "./AcceptClassButton";
+import DeclineClassButton from "./DeclineClassButton";
 
-const CollapsibleRowAdmin = ({
+const CollapsibleRowGroups = ({
   id,
   wydzial,
   przedmiot,
@@ -51,26 +51,8 @@ const CollapsibleRowAdmin = ({
         <TableCell>{rodzajSt}</TableCell>
         <TableCell>{rokSt}</TableCell>
         <TableCell align="center">
-          <EditClassButton
-            id={id}
-            wydzial={wydzial}
-            przedmiot={przedmiot}
-            kierunek={kierunek}
-            rodzajSt={rodzajSt}
-            rokSt={rokSt}
-            isZim={isZim}
-            wyklad={godzWyklad}
-            semin={godzSemin}
-            cwicz={godzCwicz}
-            lab={godzLab}
-            proj={godzProj}
-            grWyklad={grWyklad}
-            grSemin={grSemin}
-            grCwicz={grCwicz}
-            grLab={grLab}
-            grProj={grProj}
-          />
-          <DeleteClassButton id={id} nazwaPrzedmiotu={przedmiot} />
+          <AcceptClassButton />
+          <DeclineClassButton />
         </TableCell>
       </TableRow>
       <TableRow>
@@ -120,4 +102,4 @@ const CollapsibleRowAdmin = ({
   );
 };
 
-export default CollapsibleRowAdmin;
+export default CollapsibleRowGroups;

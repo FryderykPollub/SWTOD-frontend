@@ -23,6 +23,7 @@ const ChangePasswordView = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [infoOpen, setInfoOpen] = useState(false);
   const [helperMessage, setHelperMessage] = useState("");
+  const [helperError, setHelperError] = useState(false);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [againPassword, setAgainPassword] = useState("");
@@ -60,10 +61,13 @@ const ChangePasswordView = () => {
       !(againPassword === "" || againPassword === null)
     ) {
       setHelperMessage("Correct");
+      setHelperError(false);
     } else if (againPassword === "" || againPassword === null) {
       setHelperMessage("");
+      setHelperError(false);
     } else {
       setHelperMessage("Doesn't match");
+      setHelperError(true);
     }
   }, [againPassword, newPassword]);
 
@@ -107,6 +111,7 @@ const ChangePasswordView = () => {
               id="againPassword"
               type="password"
               helperText={helperMessage}
+              error={helperError}
               onChange={(e) => setAgainPassword(e.target.value)}
             />
           </Box>
@@ -114,6 +119,7 @@ const ChangePasswordView = () => {
         <DialogActions>
           <Button
             variant="contained"
+            disabled={helperError}
             onClick={() => {
               changePassword();
             }}

@@ -9,59 +9,70 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useLocalStorage } from "../../util/useLocalStorage";
+import fetchApi from "../../service/FetchService";
+import { BASE_URL } from "../../util/globalVars";
+import CollapsibleRowGroups from "./CollapsibleRowGroups";
+import { DATA } from "./MockData";
 
 const GroupsTable = () => {
-  function createData(przedmiot, kod, lGrup, lGodz) {
-    return {
-      przedmiot,
-      kod,
-      lGrup,
-      lGodz,
-    };
-  }
-
-  const exampleData = [
-    createData("Bezpieczeństwo Informacji", "IIS4.6", 10, 30),
-    createData("Bezpieczeństwo Informacji", "", 5, 15),
-    createData("Bezpieczeństwo Systemów Informatycznych", "", 12, 30),
-    createData("Bezpieczeństwo Systemów Informatycznych", "", 4, 10),
-    createData("Projekt zespołowy - implementacja", "", 3, 30),
-  ];
+  const [jwt, setJwt] = useLocalStorage("", "jwt");
+  const [subjects, setSubjects] = useState(DATA);
 
   return (
     <>
       <Grid item width="90%">
         <Typography variant="h4" sx={{ mb: 3 }} textAlign="center">
-          Moje Grupy
+          Przedmioty
         </Typography>
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>
-                  <Typography variant="h6">Przedmiot</Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="h6">Kod przedmiotu</Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="h6">Liczba grup</Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="h6">Liczba godzin</Typography>
-                </TableCell>
                 <TableCell />
+                <TableCell>
+                  <Typography variant="h6">Wydział</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography variant="h6">Nazwa Przedmiotu</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography variant="h6">Kierunek</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography variant="h6">Rodzaj studiów</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography variant="h6">Rok studiów</Typography>
+                </TableCell>
+                <TableCell align="center">
+                  <Typography variant="h6">Opcje</Typography>
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {exampleData.map((el) => (
-                <TableRow>
-                  <TableCell>{el.przedmiot}</TableCell>
-                  <TableCell>{el.kod}</TableCell>
-                  <TableCell>{el.lGrup}</TableCell>
-                  <TableCell>{el.lGodz}</TableCell>
-                </TableRow>
+              {subjects.map((element) => (
+                <CollapsibleRowGroups
+                  id={element.subjectId}
+                  wydzial={element.facultyName}
+                  przedmiot={element.subjectName}
+                  kierunek={element.fieldOfStudiesName}
+                  rodzajSt={element.typeOfStudiesName}
+                  rokSt={element.year}
+                  isZim={element.semesterType === "Z" ? true : false}
+                  godzWyklad={element.lectureHoursNumberPerWeek}
+                  godzSemin={element.seminaryHoursNumberPerWeek}
+                  godzCwicz={element.exerciseHoursNumberPerWeek}
+                  godzLab={element.laboratoryHoursNumberPerWeek}
+                  godzProj={element.projectHoursNumberPerWeek}
+                  grWyklad={element.groupsPerLecture}
+                  grSemin={element.groupsPerSeminary}
+                  grCwicz={element.groupsPerExercise}
+                  grLab={element.groupsPerLaboratory}
+                  grProj={element.groupsPerProject}
+                  key={element.subjectId}
+                />
               ))}
             </TableBody>
           </Table>
