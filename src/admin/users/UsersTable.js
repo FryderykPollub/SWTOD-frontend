@@ -94,9 +94,6 @@ const UsersTable = () => {
           <Grid item>
             <AddUserButton />
           </Grid>
-          <Grid item>
-            <Button variant="contained">Sprawdź poprawność obsady</Button>
-          </Grid>
         </Grid>
         <Snackbar
           open={errorOpen}
