@@ -1,7 +1,6 @@
 import {
   Alert,
   AlertTitle,
-  Button,
   Grid,
   Paper,
   Snackbar,
@@ -26,6 +25,8 @@ const UsersTable = () => {
   const [errorOpen, setErrorOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+  const [reload, setReload] = useState(false);
+
   function getUsers() {
     let statusResponse;
 
@@ -48,6 +49,13 @@ const UsersTable = () => {
     getUsers();
   }, []);
 
+  useEffect(() => {
+    if (reload) {
+      getUsers();
+      setReload(false);
+    }
+  }, [reload]);
+
   return (
     <>
       <Grid item width="90%">
@@ -58,14 +66,26 @@ const UsersTable = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell align="right">
+                <TableCell align="center">
                   <Typography variant="h6">Imię</Typography>
                 </TableCell>
-                <TableCell align="right">
+                <TableCell align="center">
                   <Typography variant="h6">Nazwisko</Typography>
                 </TableCell>
-                <TableCell align="right">
+                <TableCell align="center">
+                  <Typography variant="h6">Tytuł</Typography>
+                </TableCell>
+                <TableCell align="center">
+                  <Typography variant="h6">Stanowisko</Typography>
+                </TableCell>
+                <TableCell align="center">
+                  <Typography variant="h6">Email</Typography>
+                </TableCell>
+                <TableCell align="center">
                   <Typography variant="h6">Rola</Typography>
+                </TableCell>
+                <TableCell align="center">
+                  <Typography variant="h6">Status konta</Typography>
                 </TableCell>
                 <TableCell align="center">
                   <Typography variant="h6">Opcje</Typography>
@@ -84,6 +104,7 @@ const UsersTable = () => {
                   dob={user.dob}
                   isAdmin={user.isAdmin}
                   isActive={user.isActive}
+                  setReload={setReload}
                   key={user.id}
                 />
               ))}
