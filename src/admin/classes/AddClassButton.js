@@ -10,15 +10,18 @@ import {
   DialogTitle,
   Divider,
   Grid,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
   Snackbar,
   TextField,
+  Tooltip,
 } from "@mui/material";
 import fetchApi from "../../service/FetchService";
 import { BASE_URL } from "../../util/globalVars";
 import { useLocalStorage } from "../../util/useLocalStorage";
+import AddBoxIcon from "@mui/icons-material/AddBox";
 
 const AddClassButton = () => {
   const [jwt, setJwt] = useLocalStorage("", "jwt");
@@ -106,9 +109,11 @@ const AddClassButton = () => {
 
   return (
     <>
-      <Button variant="contained" onClick={() => setOpen(true)}>
-        Dodaj nowy przedmiot
-      </Button>
+      <Tooltip title="Dodaj nowy przedmiot">
+        <IconButton onClick={() => setOpen(true)}>
+          <AddBoxIcon />
+        </IconButton>
+      </Tooltip>
 
       <Dialog open={open} scroll="body" onClose={() => setOpen(false)}>
         <DialogTitle textAlign="center">

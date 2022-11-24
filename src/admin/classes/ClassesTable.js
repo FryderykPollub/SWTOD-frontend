@@ -66,7 +66,9 @@ const ClassesTable = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell />
+                <TableCell>
+                  <AddClassButton />
+                </TableCell>
                 <TableCell>
                   <Typography variant="h6">Wydział</Typography>
                 </TableCell>
@@ -113,14 +115,6 @@ const ClassesTable = () => {
             </TableBody>
           </Table>
         </TableContainer>
-        <Grid container justifyContent="space-around" mt={3.5} spacing={2}>
-          <Grid item>
-            <AddClassButton />
-          </Grid>
-          <Grid item>
-            <DeleteAllButton />
-          </Grid>
-        </Grid>
       </Grid>
     </>
   );
