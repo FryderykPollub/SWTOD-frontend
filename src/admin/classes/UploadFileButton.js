@@ -56,6 +56,7 @@ const UploadFileButton = () => {
       setErrorMessage("Nie można załadować pliku.");
       setErrorOpen(true);
     }
+    setOpen(false);
   };
 
   function postFile(sendFile) {
