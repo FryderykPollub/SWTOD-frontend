@@ -75,35 +75,34 @@ const EditClassButton = ({
     }
 
     const reqBody = {
-      id: id,
-      subjectId: null,
+      subjectId: id,
       facultyName: newWydzial,
       year: newRokSt,
       fieldOfStudiesName: newKierunek,
       typeOfStudiesName: newRodzajSt,
       subjectName: newPrzedmiot,
-      weeksPerSemester: null,
+      weeksPerSemester: 0,
       lectureHoursNumberPerWeek: newWyklad,
       exerciseHoursNumberPerWeek: newCwicz,
       laboratoryHoursNumberPerWeek: newLab,
       projectHoursNumberPerWeek: newProj,
       seminaryHoursNumberPerWeek: newSemin,
-      numberOfStudents: null,
+      numberOfStudents: 0,
       groupsPerLecture: newGrWyklad,
-      lectureHoursNumber: null,
+      lectureHoursNumber: 0,
       groupsPerExercise: newGrCwicz,
-      exerciseHoursNumber: null,
+      exerciseHoursNumber: 0,
       groupsPerLaboratory: newGrLab,
-      laboratoryHoursNumber: null,
+      laboratoryHoursNumber: 0,
       groupsPerProject: newGrProj,
-      projectHoursNumber: null,
+      projectHoursNumber: 0,
       groupsPerSeminary: newGrSemin,
-      seminaryHoursNumber: null,
+      seminaryHoursNumber: 0,
       semesterType: typSemestru,
-      hoursTotal: null,
+      hoursTotal: 0,
     };
 
-    console.log(reqBody);
+    // console.log(reqBody);
 
     let statusResponse;
 
@@ -115,7 +114,11 @@ const EditClassButton = ({
     )
       .then((response) => {
         statusResponse = response.status;
-        return response.json();
+        if (response.status === 200) {
+          return response.text();
+        } else {
+          return response.json();
+        }
       })
       .then((body) => {
         if (statusResponse === 200) {
@@ -165,33 +168,25 @@ const EditClassButton = ({
               value={newPrzedmiot}
               onChange={(e) => setPrzedmiot(e.target.value)}
             />
-            <TextField
-              margin="normal"
+            <InputLabel>Kierunek</InputLabel>
+            <Select
               fullWidth
-              name="kierunek"
-              label="Kierunek"
-              id="kierunek"
               value={newKierunek}
               onChange={(e) => setKierunek(e.target.value)}
-            />
+            >
+              <MenuItem value={"I"}>Informatyka</MenuItem>
+              <MenuItem value={"E"}>Elektrotechnika</MenuItem>
+            </Select>
             <InputLabel>Rodzaj studiów</InputLabel>
             <Select
               fullWidth
               value={newRodzajSt}
               onChange={(e) => setRodzajSt(e.target.value)}
             >
-              <MenuItem value={"Inżynierskie Stacjonarne"}>
-                Inżynierskie Stacjonarne
-              </MenuItem>
-              <MenuItem value={"Inżynierskie Niestacjonarne"}>
-                Inżynierskie Niestacjonarne
-              </MenuItem>
-              <MenuItem value={"Magisterskie Stacjonarne"}>
-                Magisterskie Stacjonarne
-              </MenuItem>
-              <MenuItem value={"Magisterskie Niestacjonarne"}>
-                Magisterskie Niestacjonarne
-              </MenuItem>
+              <MenuItem value={"IST"}>Inżynierskie Stacjonarne</MenuItem>
+              <MenuItem value={"INS"}>Inżynierskie Niestacjonarne</MenuItem>
+              <MenuItem value={"MST"}>Magisterskie Stacjonarne</MenuItem>
+              <MenuItem value={"MNS"}>Magisterskie Niestacjonarne</MenuItem>
             </Select>
             <InputLabel>Rok studiów</InputLabel>
             <Select
@@ -199,10 +194,10 @@ const EditClassButton = ({
               value={newRokSt}
               onChange={(e) => setRokSt(e.target.value)}
             >
-              <MenuItem value={"I"}>I</MenuItem>
-              <MenuItem value={"II"}>II</MenuItem>
-              <MenuItem value={"III"}>III</MenuItem>
-              <MenuItem value={"IV"}>IV</MenuItem>
+              <MenuItem value={"1"}>I</MenuItem>
+              <MenuItem value={"2"}>II</MenuItem>
+              <MenuItem value={"3"}>III</MenuItem>
+              <MenuItem value={"4"}>IV</MenuItem>
             </Select>
             <InputLabel>Rodzaj semestru</InputLabel>
             <Select
