@@ -15,7 +15,6 @@ import AddClassButton from "./AddClassButton";
 import CollapsibleRowAdmin from "./CollapsibleRowAdmin";
 import fetchApi from "../../service/FetchService";
 import { BASE_URL } from "../../util/globalVars";
-import DeleteAllButton from "./DeleteAllButton";
 import UploadFileButton from "./UploadFileButton";
 
 const ClassesTable = () => {

@@ -139,25 +139,25 @@ const AddClassButton = () => {
               value={newPrzedmiot}
               onChange={(e) => setPrzedmiot(e.target.value)}
             />
-            <TextField
-              margin="normal"
+            <InputLabel>Kierunek</InputLabel>
+            <Select
               fullWidth
-              name="kierunek"
-              label="Kierunek"
-              id="kierunek"
               value={newKierunek}
               onChange={(e) => setKierunek(e.target.value)}
-            />
+            >
+              <MenuItem value={"I"}>Informatyka</MenuItem>
+              <MenuItem value={"E"}>Elektrotechnika</MenuItem>
+            </Select>
             <InputLabel>Rodzaj studiów</InputLabel>
             <Select
               fullWidth
               value={newRodzajSt}
               onChange={(e) => setRodzajSt(e.target.value)}
             >
-              <MenuItem value={1}>Inżynierskie Stacjonarne</MenuItem>
-              <MenuItem value={2}>Inżynierskie Niestacjonarne</MenuItem>
-              <MenuItem value={2}>Magisterskie Stacjonarne</MenuItem>
-              <MenuItem value={3}>Magisterskie Niestacjonarne</MenuItem>
+              <MenuItem value={"IST"}>Inżynierskie Stacjonarne</MenuItem>
+              <MenuItem value={"INS"}>Inżynierskie Niestacjonarne</MenuItem>
+              <MenuItem value={"MST"}>Magisterskie Stacjonarne</MenuItem>
+              <MenuItem value={"MNS"}>Magisterskie Niestacjonarne</MenuItem>
             </Select>
             <InputLabel>Rok studiów</InputLabel>
             <Select

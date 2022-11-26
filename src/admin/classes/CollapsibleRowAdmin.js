@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import {
@@ -36,6 +36,47 @@ const CollapsibleRowAdmin = ({
   grProj,
 }) => {
   const [open, setOpen] = useState(false);
+  const [kierunekName, setKierunekName] = useState("");
+  const [rodzajStName, setRodzajStName] = useState("");
+  const [rokStName, setRokStName] = useState("");
+
+  function setNames() {
+    if (kierunek === "I") {
+      setKierunekName("Informatyka");
+    } else if (kierunek === "E") {
+      setKierunekName("Elektrotechnika");
+    } else {
+      setKierunekName(kierunek);
+    }
+
+    if (rodzajSt === "IST") {
+      setRodzajStName("Inżynierskie Stacjonarne");
+    } else if (rodzajSt === "INS") {
+      setRodzajStName("Inżynierskie Niestacjonarne");
+    } else if (rodzajSt === "MST") {
+      setRodzajStName("Magisterskie Stacjonarne");
+    } else if (rodzajSt === "MNS") {
+      setRodzajStName("Magisterskie Niestacjonarne");
+    } else {
+      setRodzajStName(rodzajSt);
+    }
+
+    if (rokSt === 1) {
+      setRokStName("I");
+    } else if (rokSt === 2) {
+      setRokStName("II");
+    } else if (rokSt === 3) {
+      setRokStName("III");
+    } else if (rokSt === 4) {
+      setRokStName("IV");
+    } else {
+      setRokStName(rokSt);
+    }
+  }
+
+  useEffect(() => {
+    setNames();
+  }, []);
 
   return (
     <>
@@ -47,9 +88,9 @@ const CollapsibleRowAdmin = ({
         </TableCell>
         <TableCell>{wydzial}</TableCell>
         <TableCell>{przedmiot}</TableCell>
-        <TableCell>{kierunek}</TableCell>
-        <TableCell>{rodzajSt}</TableCell>
-        <TableCell>{rokSt}</TableCell>
+        <TableCell>{kierunekName}</TableCell>
+        <TableCell>{rodzajStName}</TableCell>
+        <TableCell>{rokStName}</TableCell>
         <TableCell align="center">
           <EditClassButton
             id={id}
