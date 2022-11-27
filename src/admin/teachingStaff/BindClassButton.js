@@ -119,75 +119,43 @@ const BindClassButton = () => {
             </Stepper>
             <Box>
               {step === 0 ? (
-                <Grid
-                  container
-                  direction="column"
-                  justifyContent="center"
-                  alignItems="center"
-                  spacing={2}
-                >
-                  <Grid item>
-                    <TextField
-                      label="Nazwisko prowadzącego"
-                      variant="outlined"
-                      type="search"
-                    />
-                  </Grid>
-                  <Grid item>
-                    <Grid container direction="column" spacing={0.5}>
-                      {users.map((el) => (
-                        <Grid item>
-                          <ShowSearchedUserPanel
-                            id={el.id}
-                            tytul={el.title}
-                            imie={el.name}
-                            nazwisko={el.surname}
-                            setStep={setStep}
-                            setUserId={setUserId}
-                            key={el.id}
-                          />
-                        </Grid>
-                      ))}
+                <Grid container direction="column" spacing={0.5}>
+                  {users.map((el) => (
+                    <Grid item>
+                      <ShowSearchedUserPanel
+                        id={el.id}
+                        tytul={el.title}
+                        imie={el.name}
+                        nazwisko={el.surname}
+                        setStep={setStep}
+                        setUserId={setUserId}
+                        key={el.id}
+                      />
                     </Grid>
-                  </Grid>
+                  ))}
+
                   <Button sx={{ mt: 2 }} onClick={() => setOpen(false)}>
                     Anuluj
                   </Button>
                 </Grid>
               ) : step === 1 ? (
                 <>
-                  <Grid
-                    container
-                    direction="column"
-                    justifyContent="center"
-                    alignItems="center"
-                    spacing={2}
-                  >
-                    <Grid item>
-                      <TextField
-                        label="Nazwisko prowadzącego"
-                        variant="outlined"
-                        type="search"
-                      />
-                    </Grid>
-                    <Grid item>
-                      <Grid container direction="column" spacing={0.5}>
-                        {subjects.map((el) => (
-                          <Grid item>
-                            <ShowSearchedSubjectPanel
-                              subjectId={el.subjectId}
-                              wydzial={el.facultyName}
-                              nazwa={el.subjectName}
-                              kierunek={el.fieldOfStudiesName}
-                              rodzajSt={el.typeOfStudiesName}
-                              rokSt={el.year}
-                              setSubjectId={setSubjectId}
-                              setStep={setStep}
-                            />
-                          </Grid>
-                        ))}
+                  <Grid container direction="column" spacing={0.5}>
+                    {subjects.map((el) => (
+                      <Grid item>
+                        <ShowSearchedSubjectPanel
+                          subjectId={el.subjectId}
+                          wydzial={el.facultyName}
+                          nazwa={el.subjectName}
+                          kierunek={el.fieldOfStudiesName}
+                          rodzajSt={el.typeOfStudiesName}
+                          rokSt={el.year}
+                          setSubjectId={setSubjectId}
+                          setStep={setStep}
+                        />
                       </Grid>
-                    </Grid>
+                    ))}
+
                     <Button sx={{ mt: 2 }} onClick={() => setStep(0)}>
                       Cofnij
                     </Button>

@@ -10,6 +10,7 @@ import {
   MenuItem,
   Select,
   Snackbar,
+  TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
@@ -19,13 +20,14 @@ import { useLocalStorage } from "../../util/useLocalStorage";
 import Papa from "papaparse";
 import { BASE_URL } from "../../util/globalVars";
 
-const UploadFileButton = () => {
+const UploadFileButton = ({ setReload }) => {
   const [jwt, setJwt] = useLocalStorage("", "jwt");
   const [open, setOpen] = useState(false);
   const [errorOpen, setErrorOpen] = useState(false);
   const [infoOpen, setInfoOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+  const [rokAkadem, setRokAkadem] = useState("");
   const [wydzial, setWydzial] = useState("WEII");
   const [file, setFile] = useState();
 
@@ -73,21 +75,17 @@ const UploadFileButton = () => {
       redirect: "follow",
     };
 
-    let responseStatus;
-
     fetch(
-      BASE_URL + `/api/plan-year-subject/upload-file?facultyName=${wydzial}`,
+      BASE_URL +
+        `/api/plan-year-subject/upload-file?facultyName=${wydzial}&academicYear=${rokAkadem}`,
       requestOptions
     )
       .then((response) => {
-        responseStatus = response.status;
-        return response.json();
-      })
-      .then((result) => {
-        if (responseStatus !== 200) {
-          setErrorMessage(result.message);
+        if (response.status !== 200) {
+          setErrorMessage("Nie udało się załadować pliku");
           setErrorOpen(true);
         } else {
+          setReload(true);
           setInfoOpen(true);
           setOpen(false);
         }
@@ -135,6 +133,18 @@ const UploadFileButton = () => {
                 <MenuItem value={"WZ"}>{"Zarządzania"}</MenuItem>
                 <MenuItem value={"WPT"}>{"Podstaw Techniki"}</MenuItem>
               </Select>
+            </Grid>
+            <Grid item>
+              <TextField
+                required
+                autoFocus
+                id="academicYear"
+                name="academicYear"
+                label="Rok akademicki"
+                placeholder="2022/2023"
+                value={rokAkadem}
+                onChange={(e) => setRokAkadem(e.target.value)}
+              />
             </Grid>
             <Grid item>
               <form>
@@ -196,7 +206,7 @@ const UploadFileButton = () => {
       >
         <Alert
           onClose={() => setInfoOpen(false)}
-          severity="succes"
+          severity="success"
           sx={{ width: "100%" }}
         >
           <AlertTitle>Sukces!</AlertTitle>

@@ -67,7 +67,7 @@ const ClassesTable = () => {
             </Typography>
           </Grid>
           <Grid item>
-            <UploadFileButton />
+            <UploadFileButton setReload={setReload} />
           </Grid>
         </Grid>
         <TableContainer component={Paper}>

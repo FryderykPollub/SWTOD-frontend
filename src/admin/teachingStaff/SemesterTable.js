@@ -18,10 +18,39 @@ import ClassCollapsibleRow from "./ClassCollapsibleRow";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { DATA } from "./ExampleData";
 import BindClassButton from "./BindClassButton";
+import fetchApi from "../../service/FetchService";
+import { BASE_URL } from "../../util/globalVars";
+import { useLocalStorage } from "../../util/useLocalStorage";
 
 const SemesterTable = () => {
+  const [jwt, setJwt] = useLocalStorage("", "jwt");
+  const [academicYears, setAcademicYears] = useState([]);
   const [selection, setSelection] = useState(3);
   const [subjects, setSubjects] = useState(DATA);
+
+  function getAcademicYears() {
+    let responseStatus;
+
+    fetchApi(
+      BASE_URL + `/api/plan-year-subject-user/academic-years`,
+      "GET",
+      jwt,
+      null
+    )
+      .then((res) => {
+        responseStatus = res.status;
+        return res.json();
+      })
+      .then((body) => {
+        if (responseStatus === 200) {
+          setAcademicYears(body);
+        }
+      });
+  }
+
+  useEffect(() => {
+    getAcademicYears();
+  }, []);
 
   return (
     <>
@@ -45,6 +74,9 @@ const SemesterTable = () => {
               value={selection}
               onChange={(e) => setSelection(e.target.value)}
             >
+              {/* {academicYears.map((el, i) => (
+                <MenuItem value={i}>{el}</MenuItem>
+              ))} */}
               <MenuItem value={1}>{"2020/2021"}</MenuItem>
               <MenuItem value={2}>{"2021/2022"}</MenuItem>
               <MenuItem value={3}>{"2022/2023"}</MenuItem>
