@@ -1,8 +1,11 @@
 import {
+  Alert,
+  AlertTitle,
   Avatar,
   Box,
   Button,
   Link,
+  Snackbar,
   TextField,
   Typography,
 } from "@mui/material";
@@ -23,8 +26,7 @@ const Login = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [colorError, setColorError] = useState("primary");
+  const [errorOpen, setErrorOpen] = useState(false);
 
   function sendLoginRequest() {
     const reqBody = {
@@ -37,17 +39,16 @@ const Login = () => {
     fetchApi(BASE_URL + "/api/user/login", "POST", null, reqBody)
       .then((res) => {
         statusResponse = res.status;
+        if (res.status !== 200) {
+          setErrorOpen(true);
+        }
         return res.json();
       })
       .then((body) => {
         if (statusResponse === 200) {
           setUsername(body.username);
           setJwt(body.token);
-          setColorError("primary");
           setValid(true);
-        } else {
-          setErrorMessage(body);
-          setColorError("error");
         }
       });
   }
@@ -113,8 +114,6 @@ const Login = () => {
             type="password"
             id="password"
             onChange={(e) => setPassword(e.target.value)}
-            helperText={errorMessage}
-            color={colorError}
           />
           <Button
             fullWidth
@@ -129,6 +128,20 @@ const Login = () => {
           <ForgotPassword />
         </Box>
       </Box>
+      <Snackbar
+        open={errorOpen}
+        autoHideDuration={3000}
+        onClose={() => setErrorOpen(false)}
+      >
+        <Alert
+          onClose={() => setErrorOpen(false)}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
+          <AlertTitle>Błąd</AlertTitle>
+          Błędny email lub hasło
+        </Alert>
+      </Snackbar>
     </>
   );
 };
