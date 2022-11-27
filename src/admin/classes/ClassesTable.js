@@ -21,6 +21,8 @@ const ClassesTable = () => {
   const [jwt, setJwt] = useLocalStorage("", "jwt");
   const [subjects, setSubjects] = useState([]);
 
+  const [reload, setReload] = useState(false);
+
   function getSubjects() {
     var responseStatus;
 
@@ -38,8 +40,15 @@ const ClassesTable = () => {
 
   useEffect(() => {
     getSubjects();
-    console.log(subjects);
+    // console.log(subjects);
   }, []);
+
+  useEffect(() => {
+    if (reload) {
+      getSubjects();
+      setReload(false);
+    }
+  }, [reload]);
 
   return (
     <>
@@ -108,6 +117,7 @@ const ClassesTable = () => {
                   grCwicz={element.groupsPerExercise}
                   grLab={element.groupsPerLaboratory}
                   grProj={element.groupsPerProject}
+                  setReload={setReload}
                   key={element.subjectId}
                 />
               ))}

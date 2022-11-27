@@ -41,6 +41,7 @@ const EditClassButton = ({
   grCwicz,
   grLab,
   grProj,
+  setReload,
 }) => {
   const [jwt, setJwt] = useLocalStorage("", "jwt");
   const [open, setOpen] = useState(false);
@@ -131,6 +132,7 @@ const EditClassButton = ({
       });
 
     setOpen(false);
+    setReload(true);
   }
 
   return (
