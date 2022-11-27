@@ -145,7 +145,6 @@ const EditUserButton = ({ id, email, title, setInfoOpen, setReload }) => {
           <Box component="form" sx={{ mt: 2, maxWidth: 600 }}>
             <TextField
               margin="normal"
-              required
               fullWidth
               id="email"
               label="Email"
@@ -158,7 +157,6 @@ const EditUserButton = ({ id, email, title, setInfoOpen, setReload }) => {
             />
             <TextField
               margin="normal"
-              required
               fullWidth
               name="title"
               label="Tytuł"
@@ -168,7 +166,7 @@ const EditUserButton = ({ id, email, title, setInfoOpen, setReload }) => {
               helperText={titleHelperText}
               onChange={(e) => checkTitle(e.target.value)}
             />
-            <FormControl required fullWidth margin="normal">
+            <FormControl fullWidth margin="normal">
               <InputLabel>Stanowisko</InputLabel>
               <Select
                 value={newPosition}

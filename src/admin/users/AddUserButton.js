@@ -62,12 +62,14 @@ const AddUserButton = () => {
     fetchApi(BASE_URL + "/api/admin/create-user", "POST", jwt, reqBody)
       .then((res) => {
         statusResponse = res.status;
+        if (res.status === 200) {
+          setOpen(false);
+          setInfoOpen(true);
+        }
         return res.json();
       })
       .then((body) => {
-        if (statusResponse === 200) {
-          setInfoOpen(true);
-        } else {
+        if (statusResponse !== 200) {
           setErrorOpen(true);
           setErrorMessage(body.message);
           setEmailError(true);
@@ -270,6 +272,7 @@ const AddUserButton = () => {
         <DialogActions>
           <Button
             variant="contained"
+            disabled={!validationFlag}
             onClick={() => {
               sendRegisterRequest();
             }}
@@ -289,8 +292,8 @@ const AddUserButton = () => {
           severity="success"
           sx={{ width: "100%" }}
         >
-          <AlertTitle>Sukces!</AlertTitle>
-          Nowe hasło zostało wysłane na podany mail
+          <AlertTitle>Dodano nowego użytkownika</AlertTitle>
+          Wiadomość z hasłem została wysłana na podany adres email
         </Alert>
       </Snackbar>
       <Snackbar
