@@ -1,6 +1,8 @@
 import {
   Grid,
+  MenuItem,
   Paper,
+  Select,
   Table,
   TableBody,
   TableCell,
@@ -20,7 +22,8 @@ import UploadFileButton from "./UploadFileButton";
 const ClassesTable = () => {
   const [jwt, setJwt] = useLocalStorage("", "jwt");
   const [subjects, setSubjects] = useState([]);
-
+  const [academicYears, setAcademicYears] = useState([]);
+  const [selection, setSelection] = useState(3);
   const [reload, setReload] = useState(false);
 
   function getSubjects() {
@@ -37,6 +40,29 @@ const ClassesTable = () => {
         }
       });
   }
+  function getAcademicYears() {
+    let responseStatus;
+
+    fetchApi(
+      BASE_URL + `/api/plan-year-subject-user/academic-years`,
+      "GET",
+      jwt,
+      null
+    )
+      .then((res) => {
+        responseStatus = res.status;
+        return res.json();
+      })
+      .then((body) => {
+        if (responseStatus === 200) {
+          setAcademicYears(body);
+        }
+      });
+  }
+
+  useEffect(() => {
+    getAcademicYears();
+  }, []);
 
   useEffect(() => {
     getSubjects();
@@ -63,8 +89,22 @@ const ClassesTable = () => {
         >
           <Grid item>
             <Typography variant="h4" textAlign="center">
-              Przedmioty
+              Przedmioty na rok:
             </Typography>
+          </Grid>
+          <Grid item>
+            <Select
+              fullWidth
+              value={selection}
+              onChange={(e) => setSelection(e.target.value)}
+            >
+              {academicYears.map((el, i) => (
+                <MenuItem value={i}>{el}</MenuItem>
+              ))}
+              {/* <MenuItem value={1}>{"2020/2021"}</MenuItem>
+              <MenuItem value={2}>{"2021/2022"}</MenuItem>
+              <MenuItem value={3}>{"2022/2023"}</MenuItem> */}
+            </Select>
           </Grid>
           <Grid item>
             <UploadFileButton setReload={setReload} />

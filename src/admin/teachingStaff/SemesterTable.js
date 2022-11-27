@@ -74,12 +74,12 @@ const SemesterTable = () => {
               value={selection}
               onChange={(e) => setSelection(e.target.value)}
             >
-              {/* {academicYears.map((el, i) => (
+              {academicYears.map((el, i) => (
                 <MenuItem value={i}>{el}</MenuItem>
-              ))} */}
-              <MenuItem value={1}>{"2020/2021"}</MenuItem>
+              ))}
+              {/* <MenuItem value={1}>{"2020/2021"}</MenuItem>
               <MenuItem value={2}>{"2021/2022"}</MenuItem>
-              <MenuItem value={3}>{"2022/2023"}</MenuItem>
+              <MenuItem value={3}>{"2022/2023"}</MenuItem> */}
             </Select>
           </Grid>
           <Grid item>
