@@ -11,6 +11,8 @@ import UserInfoTable from "../profile/userInfoTable/UserInfoTable";
 import UsersTable from "./users/UsersTable";
 import GroupsTable from "../profile/myGroups/GroupsTable";
 import SemesterTable from "./teachingStaff/SemesterTable";
+import PensumTable from "./pensum/PensumTable";
+import UserSummary from "../profile/summaryTable/UserSummary";
 
 const AdminProfile = () => {
   const [jwt, setJwt] = useLocalStorage("", "jwt");
@@ -30,6 +32,10 @@ const AdminProfile = () => {
       setShowComponent(<SemesterTable />);
     } else if (view === "groups") {
       setShowComponent(<GroupsTable />);
+    } else if (view === "pensum") {
+      setShowComponent(<PensumTable />);
+    } else if (view === "summary") {
+      setShowComponent(<UserSummary />);
     } else {
       setShowComponent(<></>);
     }

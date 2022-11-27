@@ -15,6 +15,8 @@ import GroupsIcon from "@mui/icons-material/Groups";
 import GroupIcon from "@mui/icons-material/Group";
 import SchoolIcon from "@mui/icons-material/School";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
+import SummarizeIcon from "@mui/icons-material/Summarize";
+import AssignmentIcon from "@mui/icons-material/Assignment";
 
 const AdminSideBar = ({ currentView }) => {
   const navigate = useNavigate();
@@ -37,6 +39,25 @@ const AdminSideBar = ({ currentView }) => {
                 <ListItemText primary="Dane osobowe" />
               </ListItemButton>
             </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton onClick={() => currentView("summary")}>
+                <ListItemIcon>
+                  <AssignmentIcon />
+                </ListItemIcon>
+                <ListItemText primary="Rozliczenie godzin" />
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton onClick={() => currentView("groups")}>
+                <ListItemIcon>
+                  <GroupsIcon />
+                </ListItemIcon>
+                <ListItemText primary="Moje grupy" />
+              </ListItemButton>
+            </ListItem>
+          </List>
+          <Divider />
+          <List>
             <ListItem disablePadding>
               <ListItemButton onClick={() => currentView("users")}>
                 <ListItemIcon>
@@ -62,11 +83,11 @@ const AdminSideBar = ({ currentView }) => {
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
-              <ListItemButton onClick={() => currentView("groups")}>
+              <ListItemButton onClick={() => currentView("pensum")}>
                 <ListItemIcon>
-                  <GroupsIcon />
+                  <SummarizeIcon />
                 </ListItemIcon>
-                <ListItemText primary="Moje grupy" />
+                <ListItemText primary="Pensa" />
               </ListItemButton>
             </ListItem>
           </List>
