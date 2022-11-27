@@ -33,23 +33,31 @@ const ChangePasswordView = () => {
       username: username,
       oldPassword: oldPassword,
       newPassword: newPassword,
-      repeatNewPassword: againPassword,
+      repeatedNewPassword: againPassword,
     };
 
     let responseStatus;
 
-    fetchApi(BASE_URL + `api/user/change-password`, "PATCH", jwt, reqBody)
+    fetchApi(BASE_URL + `/api/user/change-password`, "PATCH", jwt, reqBody)
       .then((response) => {
         responseStatus = response.status;
         if (response.status === 200) {
           setOpen(false);
           setInfoOpen(true);
         }
+        if (response.status === 401) {
+          return response.text();
+        }
         return response.json();
       })
       .then((body) => {
-        if (responseStatus !== 200) {
+        if (responseStatus !== 200 && responseStatus !== 401) {
           setErrorMessage(body.message);
+          setErrorOpen(true);
+        }
+
+        if (responseStatus === 401) {
+          setErrorMessage("Stare hasło jest niepoprawne");
           setErrorOpen(true);
         }
       });
@@ -60,13 +68,13 @@ const ChangePasswordView = () => {
       againPassword === newPassword &&
       !(againPassword === "" || againPassword === null)
     ) {
-      setHelperMessage("Correct");
+      setHelperMessage("Hasła są zgodne");
       setHelperError(false);
     } else if (againPassword === "" || againPassword === null) {
       setHelperMessage("");
       setHelperError(false);
     } else {
-      setHelperMessage("Doesn't match");
+      setHelperMessage("Hasła nie są zgodne");
       setHelperError(true);
     }
   }, [againPassword, newPassword]);
@@ -77,9 +85,7 @@ const ChangePasswordView = () => {
         Zmień Hasło
       </Button>
       <Dialog open={open} scroll="body" onClose={() => setOpen(false)}>
-        <DialogTitle textAlign="center">
-          {"Edit your personal info"}
-        </DialogTitle>
+        <DialogTitle textAlign="center">Zmień hasło</DialogTitle>
         <DialogContent>
           <Box component="form" sx={{ mt: 2, maxWidth: 600 }}>
             <TextField
