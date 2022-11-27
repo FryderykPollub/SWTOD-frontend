@@ -47,7 +47,7 @@ const EditPensumButton = () => {
         </IconButton>
       </Tooltip>
       <Dialog open={open} scroll="body" onClose={() => setOpen(false)}>
-        <DialogTitle textAlign="center">Edytuj Pensum</DialogTitle>
+        <DialogTitle textAlign="center">Edytuj oczekiwane pensum</DialogTitle>
         <DialogContent>
           <Box component="form" sx={{ mt: 2, maxWidth: 600 }}>
             <TextField
@@ -56,7 +56,7 @@ const EditPensumButton = () => {
               required
               fullWidth
               id="pensum"
-              label="Pensum"
+              label="Oczekiwane pensum"
               name="pensum"
             />
           </Box>

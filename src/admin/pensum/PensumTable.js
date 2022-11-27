@@ -3,7 +3,9 @@ import {
   AlertTitle,
   Grid,
   IconButton,
+  MenuItem,
   Paper,
+  Select,
   Snackbar,
   Table,
   TableBody,
@@ -25,7 +27,7 @@ import CheckCorrectnessButton from "./CheckCorrectnessButton";
 const PensumTable = () => {
   const [jwt, setJwt] = useLocalStorage("", "jwt");
   const [users, setUsers] = useState([]);
-
+  const [selection, setSelection] = useState(3);
   const [reload, setReload] = useState(false);
 
   function getUsers() {
@@ -60,10 +62,21 @@ const PensumTable = () => {
         >
           <Grid item>
             <Typography variant="h4" sx={{ mb: 3 }} textAlign="center">
-              Pensa
+              Pensa na rok:
             </Typography>
           </Grid>
-          <Grid item mt={0.5}>
+          <Grid item mt={-1}>
+            <Select
+              fullWidth
+              value={selection}
+              onChange={(e) => setSelection(e.target.value)}
+            >
+              <MenuItem value={1}>{"2020/2021"}</MenuItem>
+              <MenuItem value={2}>{"2021/2022"}</MenuItem>
+              <MenuItem value={3}>{"2022/2023"}</MenuItem>
+            </Select>
+          </Grid>
+          <Grid item>
             <CheckCorrectnessButton />
           </Grid>
         </Grid>
@@ -85,13 +98,41 @@ const PensumTable = () => {
                   <Typography variant="h6">Stanowisko</Typography>
                 </TableCell>
                 <TableCell align="center">
-                  <Typography variant="h6">Pensum</Typography>
+                  <Typography variant="h6">Aktualne pensum</Typography>
+                </TableCell>
+                <TableCell align="center">
+                  <Typography variant="h6">Oczekiwane pensum</Typography>
+                </TableCell>
+                <TableCell align="center">
+                  <Typography variant="h6">Ilość nadgodzin</Typography>
+                </TableCell>
+                <TableCell align="center">
+                  <Typography variant="h6">Procent pensum</Typography>
+                </TableCell>
+                <TableCell align="center">
+                  <Typography variant="h6">Poprawność obsady</Typography>
                 </TableCell>
                 <TableCell align="center">
                   <Typography variant="h6">Opcje</Typography>
                 </TableCell>
               </TableRow>
             </TableHead>
+            <TableBody>
+              <PensumDetailsRow
+                id={9999}
+                name={"Piotr"}
+                surname={"Nowak"}
+                title={"Doktor"}
+                position={"Asystent"}
+                aktPensum={70}
+                oczPensum={100}
+                ileNadgodzin={0}
+                procPensum={"70%"}
+                isPoprawne={false}
+                key={9999}
+              />
+            </TableBody>
+
             <TableBody>
               {users.map((user) => (
                 <PensumDetailsRow
@@ -100,22 +141,30 @@ const PensumTable = () => {
                   surname={user.surname}
                   title={user.title}
                   position={user.positionName}
-                  pensum={300}
+                  aktPensum={120}
+                  oczPensum={100}
+                  ileNadgodzin={20}
+                  procPensum={"120%"}
+                  isPoprawne={true}
                   key={user.id}
                 />
               ))}
             </TableBody>
+
             <TableBody>
-              <TableCell />
-              <TableCell />
-              <TableCell />
-              <TableCell align="right">
-                <Typography variant="h6">Suma</Typography>
-              </TableCell>
-              <TableCell align="center">
-                <Typography variant="h6">1200</Typography>
-              </TableCell>
-              <TableCell />
+              <PensumDetailsRow
+                id={9998}
+                name={"Karol"}
+                surname={"Wojtyła"}
+                title={"Doktor"}
+                position={"Profesor"}
+                aktPensum={400}
+                oczPensum={100}
+                ileNadgodzin={300}
+                procPensum={"400%"}
+                isPoprawne={false}
+                key={9998}
+              />
             </TableBody>
           </Table>
         </TableContainer>

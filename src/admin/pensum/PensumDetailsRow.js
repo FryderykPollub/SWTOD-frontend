@@ -1,8 +1,21 @@
-import { TableCell, TableRow } from "@mui/material";
+import { TableCell, TableRow, Typography } from "@mui/material";
 import React, { useState } from "react";
 import EditPensumButton from "./EditPensumButton";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 
-const PensumDetailsRow = ({ id, name, surname, title, position, pensum }) => {
+const PensumDetailsRow = ({
+  id,
+  name,
+  surname,
+  title,
+  position,
+  aktPensum,
+  oczPensum,
+  ileNadgodzin,
+  procPensum,
+  isPoprawne,
+}) => {
   return (
     <>
       <TableRow>
@@ -10,7 +23,21 @@ const PensumDetailsRow = ({ id, name, surname, title, position, pensum }) => {
         <TableCell align="center">{surname}</TableCell>
         <TableCell align="center">{title}</TableCell>
         <TableCell align="center">{position}</TableCell>
-        <TableCell align="center">{pensum}</TableCell>
+        <TableCell align="center">{aktPensum}</TableCell>
+        <TableCell align="center">{oczPensum}</TableCell>
+        <TableCell align="center">{ileNadgodzin}</TableCell>
+        <TableCell align="center">{procPensum}</TableCell>
+        <TableCell align="center">
+          {isPoprawne ? (
+            <Typography color="lightgreen">
+              <CheckCircleOutlineIcon />
+            </Typography>
+          ) : (
+            <Typography color="red">
+              <CancelOutlinedIcon color="red" />
+            </Typography>
+          )}
+        </TableCell>
         <TableCell align="center">
           <EditPensumButton />
         </TableCell>
