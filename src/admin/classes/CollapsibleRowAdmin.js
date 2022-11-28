@@ -35,6 +35,7 @@ const CollapsibleRowAdmin = ({
   grLab,
   grProj,
   setReload,
+  rokAkadem,
 }) => {
   const [open, setOpen] = useState(false);
   const [kierunekName, setKierunekName] = useState("");
@@ -112,8 +113,13 @@ const CollapsibleRowAdmin = ({
             grLab={grLab}
             grProj={grProj}
             setReload={setReload}
+            rokAkadem={rokAkadem}
           />
-          <DeleteClassButton id={id} nazwaPrzedmiotu={przedmiot} />
+          <DeleteClassButton
+            id={id}
+            nazwaPrzedmiotu={przedmiot}
+            setReload={setReload}
+          />
         </TableCell>
       </TableRow>
       <TableRow>

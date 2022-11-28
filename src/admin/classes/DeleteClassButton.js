@@ -16,7 +16,7 @@ import { useLocalStorage } from "../../util/useLocalStorage";
 import fetchApi from "../../service/FetchService";
 import { BASE_URL } from "../../util/globalVars";
 
-const DeleteClassButton = ({ id, nazwaPrzedmiotu }) => {
+const DeleteClassButton = ({ id, nazwaPrzedmiotu, setReload }) => {
   const [jwt, setJwt] = useLocalStorage("", "jwt");
   const [open, setOpen] = useState(false);
   const [errorOpen, setErrorOpen] = useState(false);
@@ -47,6 +47,7 @@ const DeleteClassButton = ({ id, nazwaPrzedmiotu }) => {
       });
 
     setOpen(false);
+    setReload(true);
   }
 
   return (

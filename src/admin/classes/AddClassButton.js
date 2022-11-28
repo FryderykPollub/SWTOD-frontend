@@ -23,19 +23,19 @@ import { BASE_URL } from "../../util/globalVars";
 import { useLocalStorage } from "../../util/useLocalStorage";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 
-const AddClassButton = () => {
+const AddClassButton = ({ rokAkadem }) => {
   const [jwt, setJwt] = useLocalStorage("", "jwt");
   const [open, setOpen] = useState(false);
   const [errorOpen, setErrorOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("Nieznany błąd");
   const [infoOpen, setInfoOpen] = useState(false);
 
-  const [newWydzial, setWydzial] = useState("");
+  const [newWydzial, setWydzial] = useState("WEII");
   const [newPrzedmiot, setPrzedmiot] = useState("");
-  const [newKierunek, setKierunek] = useState("");
-  const [newRodzajSt, setRodzajSt] = useState("");
-  const [newRokSt, setRokSt] = useState("");
-  const [newIsZim, setIsZim] = useState("");
+  const [newKierunek, setKierunek] = useState("I");
+  const [newRodzajSt, setRodzajSt] = useState("IST");
+  const [newRokSt, setRokSt] = useState(1);
+  const [newIsZim, setIsZim] = useState(true);
   const [newWyklad, setWyklad] = useState("");
   const [newSemin, setSemin] = useState("");
   const [newCwicz, setCwicz] = useState("");
@@ -47,8 +47,88 @@ const AddClassButton = () => {
   const [newGrLab, setGrLab] = useState("");
   const [newGrProj, setGrProj] = useState("");
 
+  function validateData() {
+    if (newPrzedmiot === "" || newPrzedmiot == null) {
+      setErrorMessage("Nazwa przedmiotu nie może być pusta");
+      setErrorOpen(true);
+    } else if (newWyklad === "" || newWyklad === null) {
+      if (newGrWyklad === "" || newGrWyklad == null) {
+        setWyklad(0);
+        setGrWyklad(0);
+      } else {
+        setErrorMessage("Nie prowadzono liczby godzin dla wykładu");
+        setErrorOpen(true);
+      }
+    } else if (newSemin === "" || newSemin === null) {
+      if (newGrSemin === "" || newGrSemin == null) {
+        setSemin(0);
+        setGrSemin(0);
+      } else {
+        setErrorMessage("Nie prowadzono liczby godzin dla seminarium");
+        setErrorOpen(true);
+      }
+    } else if (newCwicz === "" || newCwicz === null) {
+      if (newGrCwicz === "" || newGrCwicz == null) {
+        setCwicz(0);
+        setGrCwicz(0);
+      } else {
+        setErrorMessage("Nie prowadzono liczby godzin dla ćwiczeń");
+        setErrorOpen(true);
+      }
+    } else if (newLab === "" || newLab === null) {
+      if (newGrLab === "" || newGrLab == null) {
+        setLab(0);
+        setGrLab(0);
+      } else {
+        setErrorMessage("Nie prowadzono liczby godzin dla laboratorium");
+        setErrorOpen(true);
+      }
+    } else if (newProj === "" || newProj === null) {
+      if (newGrProj === "" || newGrProj == null) {
+        setProj(0);
+        setGrProj(0);
+      } else {
+        setErrorMessage("Nie prowadzono liczby godzin dla projektu");
+        setErrorOpen(true);
+      }
+    } else if (newGrWyklad === "" || newGrWyklad === null) {
+      setErrorMessage("Nie prowadzono liczby grup dla wykładu");
+      setErrorOpen(true);
+    } else if (newGrSemin === "" || newGrSemin === null) {
+      setErrorMessage("Nie prowadzono liczby grup dla seminarium");
+      setErrorOpen(true);
+    } else if (newGrCwicz === "" || newGrCwicz === null) {
+      setErrorMessage("Nie prowadzono liczby grup dla ćwiczeń");
+      setErrorOpen(true);
+    } else if (newGrLab === "" || newGrLab === null) {
+      setErrorMessage("Nie prowadzono liczby grup dla laboratorium");
+      setErrorOpen(true);
+    } else if (newGrProj === "" || newGrProj === null) {
+      setErrorMessage("Nie prowadzono liczby grup dla projektu");
+      setErrorOpen(true);
+    } else if (
+      newWyklad +
+        newGrWyklad +
+        newSemin +
+        newGrSemin +
+        newCwicz +
+        newGrCwicz +
+        newLab +
+        newGrLab +
+        newProj +
+        newGrProj ===
+      0
+    ) {
+      setErrorMessage("Nie dodano żadnych grup ani godzin do przedmiotu");
+      setErrorOpen(true);
+    } else {
+      addNewClassRequest();
+    }
+  }
+
   function addNewClassRequest() {
     var typSemestru;
+    var tygodnie;
 
     if (newIsZim) {
       typSemestru = "Z";
@@ -56,33 +136,43 @@ const AddClassButton = () => {
       typSemestru = "L";
     }
 
+    if (newRodzajSt === "IST" || newRodzajSt === "MST") {
+      tygodnie = 15;
+    } else {
+      tygodnie = 5;
+    }
+
     const reqBody = {
+      classesTypeNamesPysIds: {},
       id: null,
       subjectId: null,
       facultyName: newWydzial,
       year: newRokSt,
+      academicYear: rokAkadem,
       fieldOfStudiesName: newKierunek,
       typeOfStudiesName: newRodzajSt,
       subjectName: newPrzedmiot,
-      weeksPerSemester: null,
+      weeksPerSemester: tygodnie,
       lectureHoursNumberPerWeek: newWyklad,
       exerciseHoursNumberPerWeek: newCwicz,
       laboratoryHoursNumberPerWeek: newLab,
       projectHoursNumberPerWeek: newProj,
       seminaryHoursNumberPerWeek: newSemin,
-      numberOfStudents: null,
+      numberOfStudents: 420,
       groupsPerLecture: newGrWyklad,
-      lectureHoursNumber: null,
+      lectureHoursNumber: tygodnie * newGrWyklad,
       groupsPerExercise: newGrCwicz,
-      exerciseHoursNumber: null,
+      exerciseHoursNumber: tygodnie * newGrCwicz,
       groupsPerLaboratory: newGrLab,
-      laboratoryHoursNumber: null,
+      laboratoryHoursNumber: tygodnie * newGrLab,
       groupsPerProject: newGrProj,
-      projectHoursNumber: null,
+      projectHoursNumber: tygodnie * newGrProj,
       groupsPerSeminary: newGrSemin,
-      seminaryHoursNumber: null,
+      seminaryHoursNumber: tygodnie * newGrSemin,
       semesterType: typSemestru,
-      hoursTotal: null,
+      hoursTotal:
+        tygodnie *
+        (newGrWyklad + newGrCwicz + newGrLab + newGrProj + newGrSemin),
     };
 
     console.log(reqBody);
@@ -92,7 +182,11 @@ const AddClassButton = () => {
     fetchApi(BASE_URL + `/api/plan-year-subject/add`, "POST", jwt, reqBody)
       .then((response) => {
         statusResponse = response.status;
-        return response.json();
+        if (response.status !== 200) {
+          return response.json();
+        } else {
+          return response.text();
+        }
       })
       .then((body) => {
         if (statusResponse === 200) {
@@ -121,15 +215,18 @@ const AddClassButton = () => {
         </DialogTitle>
         <DialogContent>
           <Box component="form" sx={{ m: 2, maxWidth: 600 }}>
-            <TextField
-              margin="normal"
+            <Select
               fullWidth
-              name="wydzial"
-              label="Wydział"
-              id="wydzial"
               value={newWydzial}
               onChange={(e) => setWydzial(e.target.value)}
-            />
+            >
+              <MenuItem value={"WEII"}>WEiI</MenuItem>
+              <MenuItem value={"WM"}>WM</MenuItem>
+              <MenuItem value={"WBIA"}>WBiA</MenuItem>
+              <MenuItem value={"WIS"}>WIS</MenuItem>
+              <MenuItem value={"WZ"}>WZ</MenuItem>
+              <MenuItem value={"WPT"}>WPT</MenuItem>
+            </Select>
             <TextField
               margin="normal"
               fullWidth
@@ -330,7 +427,7 @@ const AddClassButton = () => {
           <Button
             variant="contained"
             onClick={() => {
-              addNewClassRequest();
+              validateData();
             }}
           >
             Potwierdź

@@ -114,6 +114,7 @@ const UploadFileButton = ({ setReload }) => {
             direction="row"
             justifyContent="center"
             alignItems="center"
+            mt={-3}
             spacing={4}
           >
             <Grid item>

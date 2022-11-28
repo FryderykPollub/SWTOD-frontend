@@ -23,13 +23,25 @@ const ClassesTable = () => {
   const [jwt, setJwt] = useLocalStorage("", "jwt");
   const [subjects, setSubjects] = useState([]);
   const [academicYears, setAcademicYears] = useState([]);
-  const [selection, setSelection] = useState(3);
+  const [selection, setSelection] = useState(0);
   const [reload, setReload] = useState(false);
+  const [rokAkadem, setRokAkadem] = useState("2022/2023");
+
+  function handleSelection(val) {
+    setSelection(val);
+    setRokAkadem(academicYears[val]);
+  }
 
   function getSubjects() {
     var responseStatus;
 
-    fetchApi(BASE_URL + "/api/plan-year-subject/all", "GET", jwt, null)
+    fetchApi(
+      BASE_URL +
+        `/api/plan-year-subject/academic-year?academicYear=${rokAkadem}`,
+      "GET",
+      jwt,
+      null
+    )
       .then((response) => {
         responseStatus = response.status;
         return response.json();
@@ -101,9 +113,6 @@ const ClassesTable = () => {
               {academicYears.map((el, i) => (
                 <MenuItem value={i}>{el}</MenuItem>
               ))}
-              {/* <MenuItem value={1}>{"2020/2021"}</MenuItem>
-              <MenuItem value={2}>{"2021/2022"}</MenuItem>
-              <MenuItem value={3}>{"2022/2023"}</MenuItem> */}
             </Select>
           </Grid>
           <Grid item>
@@ -115,7 +124,7 @@ const ClassesTable = () => {
             <TableHead>
               <TableRow>
                 <TableCell>
-                  <AddClassButton />
+                  <AddClassButton rokAkadem={rokAkadem} />
                 </TableCell>
                 <TableCell>
                   <Typography variant="h6">Wydział</Typography>
@@ -158,6 +167,7 @@ const ClassesTable = () => {
                   grLab={element.groupsPerLaboratory}
                   grProj={element.groupsPerProject}
                   setReload={setReload}
+                  rokAkadem={rokAkadem}
                   key={element.subjectId}
                 />
               ))}

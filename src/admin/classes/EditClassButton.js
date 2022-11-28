@@ -42,6 +42,7 @@ const EditClassButton = ({
   grLab,
   grProj,
   setReload,
+  rokAkadem,
 }) => {
   const [jwt, setJwt] = useLocalStorage("", "jwt");
   const [open, setOpen] = useState(false);
@@ -68,6 +69,7 @@ const EditClassButton = ({
 
   function sendUpdateRequest() {
     var typSemestru;
+    var tygodnie;
 
     if (newIsZim) {
       typSemestru = "Z";
@@ -75,32 +77,43 @@ const EditClassButton = ({
       typSemestru = "L";
     }
 
+    if (newRodzajSt === "IST" || newRodzajSt === "MST") {
+      tygodnie = 15;
+    } else {
+      tygodnie = 5;
+    }
+
     const reqBody = {
-      subjectId: id,
+      classesTypeNamesPysIds: {},
+      id: null,
+      subjectId: null,
       facultyName: newWydzial,
       year: newRokSt,
+      academicYear: rokAkadem,
       fieldOfStudiesName: newKierunek,
       typeOfStudiesName: newRodzajSt,
       subjectName: newPrzedmiot,
-      weeksPerSemester: 9,
+      weeksPerSemester: tygodnie,
       lectureHoursNumberPerWeek: newWyklad,
       exerciseHoursNumberPerWeek: newCwicz,
       laboratoryHoursNumberPerWeek: newLab,
       projectHoursNumberPerWeek: newProj,
       seminaryHoursNumberPerWeek: newSemin,
-      numberOfStudents: 9,
+      numberOfStudents: 420,
       groupsPerLecture: newGrWyklad,
-      lectureHoursNumber: 9,
+      lectureHoursNumber: tygodnie * newGrWyklad,
       groupsPerExercise: newGrCwicz,
-      exerciseHoursNumber: 9,
+      exerciseHoursNumber: tygodnie * newGrCwicz,
       groupsPerLaboratory: newGrLab,
-      laboratoryHoursNumber: 9,
+      laboratoryHoursNumber: tygodnie * newGrLab,
       groupsPerProject: newGrProj,
-      projectHoursNumber: 9,
+      projectHoursNumber: tygodnie * newGrProj,
       groupsPerSeminary: newGrSemin,
-      seminaryHoursNumber: 9,
+      seminaryHoursNumber: tygodnie * newGrSemin,
       semesterType: typSemestru,
-      hoursTotal: 9,
+      hoursTotal:
+        tygodnie *
+        (newGrWyklad + newGrCwicz + newGrLab + newGrProj + newGrSemin),
     };
 
     // console.log(reqBody);
@@ -152,15 +165,18 @@ const EditClassButton = ({
         </DialogTitle>
         <DialogContent>
           <Box component="form" sx={{ m: 2, maxWidth: 600 }}>
-            <TextField
-              margin="normal"
+            <Select
               fullWidth
-              name="wydzial"
-              label="Wydział"
-              id="wydzial"
               value={newWydzial}
               onChange={(e) => setWydzial(e.target.value)}
-            />
+            >
+              <MenuItem value={"WEII"}>WEiI</MenuItem>
+              <MenuItem value={"WM"}>WM</MenuItem>
+              <MenuItem value={"WBIA"}>WBiA</MenuItem>
+              <MenuItem value={"WIS"}>WIS</MenuItem>
+              <MenuItem value={"WZ"}>WZ</MenuItem>
+              <MenuItem value={"WPT"}>WPT</MenuItem>
+            </Select>
             <TextField
               margin="normal"
               fullWidth
