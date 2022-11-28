@@ -67,6 +67,85 @@ const EditClassButton = ({
   const [newGrLab, setGrLab] = useState(grLab);
   const [newGrProj, setGrProj] = useState(grProj);
 
+  function validateData() {
+    if (newPrzedmiot === "" || newPrzedmiot == null) {
+      setErrorMessage("Nazwa przedmiotu nie może być pusta");
+      setErrorOpen(true);
+    } else if (newWyklad === "" || newWyklad === null) {
+      if (newGrWyklad === "" || newGrWyklad == null) {
+        setWyklad(0);
+        setGrWyklad(0);
+      } else {
+        setErrorMessage("Nie prowadzono liczby godzin dla wykładu");
+        setErrorOpen(true);
+      }
+    } else if (newSemin === "" || newSemin === null) {
+      if (newGrSemin === "" || newGrSemin == null) {
+        setSemin(0);
+        setGrSemin(0);
+      } else {
+        setErrorMessage("Nie prowadzono liczby godzin dla seminarium");
+        setErrorOpen(true);
+      }
+    } else if (newCwicz === "" || newCwicz === null) {
+      if (newGrCwicz === "" || newGrCwicz == null) {
+        setCwicz(0);
+        setGrCwicz(0);
+      } else {
+        setErrorMessage("Nie prowadzono liczby godzin dla ćwiczeń");
+        setErrorOpen(true);
+      }
+    } else if (newLab === "" || newLab === null) {
+      if (newGrLab === "" || newGrLab == null) {
+        setLab(0);
+        setGrLab(0);
+      } else {
+        setErrorMessage("Nie prowadzono liczby godzin dla laboratorium");
+        setErrorOpen(true);
+      }
+    } else if (newProj === "" || newProj === null) {
+      if (newGrProj === "" || newGrProj == null) {
+        setProj(0);
+        setGrProj(0);
+      } else {
+        setErrorMessage("Nie prowadzono liczby godzin dla projektu");
+        setErrorOpen(true);
+      }
+    } else if (newGrWyklad === "" || newGrWyklad === null) {
+      setErrorMessage("Nie prowadzono liczby grup dla wykładu");
+      setErrorOpen(true);
+    } else if (newGrSemin === "" || newGrSemin === null) {
+      setErrorMessage("Nie prowadzono liczby grup dla seminarium");
+      setErrorOpen(true);
+    } else if (newGrCwicz === "" || newGrCwicz === null) {
+      setErrorMessage("Nie prowadzono liczby grup dla ćwiczeń");
+      setErrorOpen(true);
+    } else if (newGrLab === "" || newGrLab === null) {
+      setErrorMessage("Nie prowadzono liczby grup dla laboratorium");
+      setErrorOpen(true);
+    } else if (newGrProj === "" || newGrProj === null) {
+      setErrorMessage("Nie prowadzono liczby grup dla projektu");
+      setErrorOpen(true);
+    } else if (
+      newWyklad +
+        newGrWyklad +
+        newSemin +
+        newGrSemin +
+        newCwicz +
+        newGrCwicz +
+        newLab +
+        newGrLab +
+        newProj +
+        newGrProj ===
+      0
+    ) {
+      setErrorMessage("Nie dodano żadnych grup ani godzin do przedmiotu");
+      setErrorOpen(true);
+    } else {
+      sendUpdateRequest();
+    }
+  }
+
   function sendUpdateRequest() {
     var typSemestru;
     var tygodnie;
@@ -377,7 +456,7 @@ const EditClassButton = ({
           <Button
             variant="contained"
             onClick={() => {
-              sendUpdateRequest();
+              validateData();
             }}
           >
             Potwierdź

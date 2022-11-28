@@ -23,7 +23,7 @@ import { BASE_URL } from "../../util/globalVars";
 import { useLocalStorage } from "../../util/useLocalStorage";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 
-const AddClassButton = ({ rokAkadem }) => {
+const AddClassButton = ({ rokAkadem, setReload }) => {
   const [jwt, setJwt] = useLocalStorage("", "jwt");
   const [open, setOpen] = useState(false);
   const [errorOpen, setErrorOpen] = useState(false);
@@ -199,6 +199,7 @@ const AddClassButton = ({ rokAkadem }) => {
       });
 
     setOpen(false);
+    setReload(true);
   }
 
   return (
