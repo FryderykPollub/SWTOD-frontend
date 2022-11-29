@@ -23,17 +23,21 @@ const EditPensumButton = ({ id, setReload }) => {
   const [open, setOpen] = useState(false);
   const [infoOpen, setInfoOpen] = useState(false);
   const [errorOpen, setErrorOpen] = useState(false);
+  const [pensum, setPensum] = useState("");
 
   function editPensum() {
-    fetchApi(BASE_URL + `/api/pensum/${id}/update`, "PUT", jwt, null).then(
-      (res) => {
-        if (res.status === 200) {
-          setInfoOpen(true);
-        } else {
-          setErrorOpen(true);
-        }
+    fetchApi(
+      BASE_URL + `/api/pensum/${id}/update?pensum=${pensum}`,
+      "PUT",
+      jwt,
+      null
+    ).then((res) => {
+      if (res.status === 200) {
+        setInfoOpen(true);
+      } else {
+        setErrorOpen(true);
       }
-    );
+    });
     setOpen(false);
     setReload(true);
   }
@@ -57,6 +61,8 @@ const EditPensumButton = ({ id, setReload }) => {
               id="pensum"
               label="Oczekiwane pensum"
               name="pensum"
+              value={pensum}
+              onChange={(e) => setPensum(e.target.value)}
             />
           </Box>
         </DialogContent>

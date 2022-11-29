@@ -23,6 +23,7 @@ const PensumTable = () => {
   const [selection, setSelection] = useState(0);
   const [rokAkadem, setRokAkadem] = useState("2022/2023");
   const [academicYears, setAcademicYears] = useState([]);
+  const [reload, setReload] = useState(false);
 
   function handleSelection(val) {
     setSelection(val);
@@ -68,6 +69,12 @@ const PensumTable = () => {
     getPensums();
     getAcademicYears();
   }, []);
+
+  useEffect(() => {
+    if (reload) {
+      getPensums();
+    }
+  }, [reload]);
 
   return (
     <>

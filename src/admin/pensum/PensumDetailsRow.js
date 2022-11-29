@@ -15,6 +15,7 @@ const PensumDetailsRow = ({
   ileNadgodzin,
   procPensum,
   isPoprawne,
+  setReload,
 }) => {
   return (
     <>
@@ -26,7 +27,7 @@ const PensumDetailsRow = ({
         <TableCell align="center">{aktPensum}</TableCell>
         <TableCell align="center">{oczPensum}</TableCell>
         <TableCell align="center">{ileNadgodzin}</TableCell>
-        <TableCell align="center">{procPensum}</TableCell>
+        <TableCell align="center">{procPensum * 10 * 10}%</TableCell>
         <TableCell align="center">
           {isPoprawne ? (
             <Typography color="lightgreen">
@@ -39,7 +40,7 @@ const PensumDetailsRow = ({
           )}
         </TableCell>
         <TableCell align="center">
-          <EditPensumButton />
+          <EditPensumButton id={id} setReload={setReload} />
         </TableCell>
       </TableRow>
     </>
