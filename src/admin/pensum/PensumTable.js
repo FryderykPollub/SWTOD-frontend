@@ -20,7 +20,7 @@ import CheckCorrectnessButton from "./CheckCorrectnessButton";
 
 const PensumTable = () => {
   const [jwt, setJwt] = useLocalStorage("", "jwt");
-  const [users, setUsers] = useState([]);
+  const [pensum, setPensum] = useState([]);
   const [selection, setSelection] = useState(0);
   const [rokAkadem, setRokAkadem] = useState("2022/2023");
   const [academicYears, setAcademicYears] = useState([]);
@@ -30,17 +30,17 @@ const PensumTable = () => {
     setRokAkadem(academicYears[val]);
   }
 
-  function getUsers() {
+  function getPensums() {
     let statusResponse;
 
-    fetchApi(BASE_URL + "/api/user/all", "GET", jwt, null)
+    fetchApi(BASE_URL + "/api/pensum", "GET", jwt, null)
       .then((res) => {
         statusResponse = res.status;
         return res.json();
       })
       .then((body) => {
         if (statusResponse === 200) {
-          setUsers(body);
+          setPensum(body);
         }
       });
   }
@@ -66,7 +66,7 @@ const PensumTable = () => {
   }
 
   useEffect(() => {
-    getUsers();
+    getPensums();
     getAcademicYears();
   }, []);
 
@@ -139,53 +139,20 @@ const PensumTable = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              <PensumDetailsRow
-                id={9999}
-                name={"Piotr"}
-                surname={"Nowak"}
-                title={"Doktor"}
-                position={"Asystent"}
-                aktPensum={70}
-                oczPensum={100}
-                ileNadgodzin={0}
-                procPensum={"70%"}
-                isPoprawne={false}
-                key={9999}
-              />
-            </TableBody>
-
-            <TableBody>
-              {users.map((user) => (
+              {pensum.map((el, i) => (
                 <PensumDetailsRow
-                  id={user.id}
-                  name={user.name}
-                  surname={user.surname}
-                  title={user.title}
-                  position={user.positionName}
-                  aktPensum={120}
-                  oczPensum={100}
-                  ileNadgodzin={20}
-                  procPensum={"120%"}
-                  isPoprawne={true}
-                  key={user.id}
+                  name={el.name}
+                  surname={el.surname}
+                  title={el.title}
+                  position={el.position}
+                  aktPensum={el.actualPensum}
+                  oczPensum={el.expectedPensum}
+                  ileNadgodzin={el.overtimeHoursNumber}
+                  procPensum={el.percentOfOvertimeHours}
+                  isPoprawne={el.isCorrect}
+                  key={i}
                 />
               ))}
-            </TableBody>
-
-            <TableBody>
-              <PensumDetailsRow
-                id={9998}
-                name={"Karol"}
-                surname={"Wojtyła"}
-                title={"Doktor"}
-                position={"Profesor"}
-                aktPensum={400}
-                oczPensum={100}
-                ileNadgodzin={300}
-                procPensum={"400%"}
-                isPoprawne={false}
-                key={9998}
-              />
             </TableBody>
           </Table>
         </TableContainer>

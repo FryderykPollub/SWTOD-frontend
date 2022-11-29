@@ -5,179 +5,124 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
   TableRow,
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-
+import fetchApi from "../../service/FetchService";
+import { BASE_URL } from "../../util/globalVars";
 import { useLocalStorage } from "../../util/useLocalStorage";
-import CollapsibleRow from "./CollapsibleRow";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 
 const UserSummary = () => {
   const [jwt, setJwt] = useLocalStorage("", "jwt");
-  const [course, setCourse] = useState("");
-  const [faculty, setFaculty] = useState("");
-  const [degree, setDegree] = useState("");
-  const [year, setYear] = useState("");
-  const [semester, setSemester] = useState("");
+  const [actualPensum, setActualPensum] = useState("");
+  const [expectedPensum, setExpectedPensum] = useState("");
+  const [isCorrect, setIsCorrect] = useState("");
+  const [overtimeHours, setOvertimeHours] = useState("");
+  const [overtimePercent, setOvertimePercent] = useState("");
+  const [username, setUsername] = useLocalStorage("", "user");
+  const [id, setId] = useState("");
 
-  function createData(
-    przedmiot,
-    kierunek,
-    stopien,
-    rokSt,
-    semestr,
-    isZim,
-    lTyg,
-    wyklad,
-    semin,
-    cwicz,
-    lab,
-    proj,
-    lGrup
-  ) {
-    return {
-      przedmiot,
-      kierunek,
-      stopien,
-      rokSt,
-      semestr,
-      isZim,
-      lTyg,
-      wyklad,
-      semin,
-      cwicz,
-      lab,
-      proj,
-      lGrup,
-    };
+  function getUser() {
+    let statusResponse;
+
+    fetchApi(BASE_URL + `/api/user?username=${username}`, "GET", jwt, null)
+      .then((response) => {
+        statusResponse = response.status;
+        return response.json();
+      })
+      .then((body) => {
+        if (statusResponse === 200) {
+          setId(body.id);
+        }
+      });
   }
 
-  const exampleData = [
-    createData(
-      "Bezpieczeństwo Informacji",
-      "IINS",
-      "I",
-      "II",
-      "IV",
-      false,
-      5,
-      3,
-      null,
-      null,
-      null,
-      null,
-      null
-    ),
-    createData(
-      "Bezpieczeństwo Informacji",
-      "IIST",
-      "I",
-      "II",
-      "IV",
-      false,
-      15,
-      2,
-      null,
-      null,
-      2,
-      null,
-      6
-    ),
-    createData(
-      "Bezpieczeństwo Systemów Informatycznych",
-      "IINS",
-      "I",
-      "III",
-      "V",
-      true,
-      5,
-      3,
-      null,
-      null,
-      null,
-      null,
-      null
-    ),
-    createData(
-      "Bezpieczeństwo Systemów Informatycznych",
-      "IIST",
-      "I",
-      "III",
-      "V",
-      true,
-      15,
-      2,
-      null,
-      null,
-      null,
-      null,
-      null
-    ),
-    createData(
-      "Projekt zespołowy - implementacja",
-      "IIST",
-      "I",
-      "IV",
-      "VII",
-      true,
-      10,
-      null,
-      null,
-      null,
-      null,
-      3,
-      2
-    ),
-  ];
+  function getPensum() {
+    let statusResponse;
+
+    fetchApi(BASE_URL + `/api/pensum/${id}`, "GET", jwt, null)
+      .then((res) => {
+        statusResponse = res.status;
+        return res.json();
+      })
+      .then((body) => {
+        if (statusResponse === 200) {
+          setActualPensum(body.actualPensum);
+          setExpectedPensum(body.expectedPensum);
+          setIsCorrect(body.isCorrect);
+          setOvertimeHours(body.overtimeHoursNumber);
+          setOvertimePercent(body.percentOfOvertimeHours);
+        }
+      });
+  }
+
+  useEffect(() => {
+    getUser();
+    console.log(id);
+  }, []);
+
+  useEffect(() => {
+    getPensum();
+  }, [id]);
 
   return (
     <>
-      <Grid item width="90%">
+      <Grid item width="40%">
         <Typography variant="h4" sx={{ mb: 3 }} textAlign="center">
-          Rozliczenie godzin
+          Pensum
         </Typography>
         <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
+          <Table sx={{ width: "100%" }}>
+            <TableBody>
               <TableRow>
-                <TableCell />
-                <TableCell>
-                  <Typography variant="h6">Przedmiot</Typography>
+                <TableCell component="th" scope="row">
+                  <Typography sx={{ fontWeight: "bold" }}>
+                    Aktualne pensum:
+                  </Typography>
                 </TableCell>
-                <TableCell>
-                  <Typography variant="h6">Kierunek</Typography>
+                <TableCell align="left">{actualPensum}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  <Typography sx={{ fontWeight: "bold" }}>
+                    Oczekiwane pensum:
+                  </Typography>
                 </TableCell>
-                <TableCell>
-                  <Typography variant="h6">Stopień</Typography>
+                <TableCell align="left">{expectedPensum}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  <Typography sx={{ fontWeight: "bold" }}>
+                    Liczba nadgodzin:
+                  </Typography>
                 </TableCell>
-                <TableCell>
-                  <Typography variant="h6">Rok studiów</Typography>
+                <TableCell align="left">{overtimeHours}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  <Typography sx={{ fontWeight: "bold" }}>
+                    Procent nadgodzin:
+                  </Typography>
                 </TableCell>
-                <TableCell>
-                  <Typography variant="h6">Semestr</Typography>
+                <TableCell align="left">{overtimePercent}%</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  <Typography sx={{ fontWeight: "bold" }}>
+                    Poprawność pensum:
+                  </Typography>
+                </TableCell>
+                <TableCell align="left">
+                  {isCorrect ? (
+                    <CheckCircleIcon sx={{ color: "lightgreen" }} />
+                  ) : (
+                    <CancelOutlinedIcon sx={{ color: "red" }} />
+                  )}
                 </TableCell>
               </TableRow>
-            </TableHead>
-            <TableBody>
-              {exampleData.map((element) => (
-                <CollapsibleRow
-                  przedmiot={element.przedmiot}
-                  kierunek={element.kierunek}
-                  stopien={element.stopien}
-                  rokSt={element.rokSt}
-                  semestr={element.semestr}
-                  isZim={element.isZim}
-                  lTyg={element.lTyg}
-                  wyklad={element.wyklad}
-                  semin={element.semin}
-                  cwicz={element.cwicz}
-                  lab={element.lab}
-                  proj={element.proj}
-                  lGrup={element.lGrup}
-                />
-              ))}
             </TableBody>
           </Table>
         </TableContainer>
