@@ -1,40 +1,20 @@
 import { Button, Grid } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import fetchApi from "../../service/FetchService";
-import { BASE_URL } from "../../util/globalVars";
-import { useLocalStorage } from "../../util/useLocalStorage";
+import React from "react";
 import GroupInputField from "./GroupInputPanel";
 
 const AssignGroupsPanel = ({
   setStep,
-  subjectId,
   setWyklad,
   setCwicz,
   setLab,
   setProj,
   setSemin,
+  maxWyklad,
+  maxSemin,
+  maxCwicz,
+  maxLab,
+  maxProj,
 }) => {
-  const [jwt, setJwt] = useLocalStorage("", "jwt");
-  const [subject, setSubject] = useState("");
-
-  function getSubjectById() {
-    let statusResponse;
-
-    fetchApi(BASE_URL + `/api/plan-year-subject/${subjectId}`, "GET", jwt, null)
-      .then((response) => {
-        statusResponse = response.status;
-        return response.json();
-      })
-      .then((body) => {
-        if (statusResponse === 200) {
-          setSubject(body);
-        }
-      });
-  }
-
-  useEffect(() => {
-    getSubjectById();
-  }, [subjectId]);
   return (
     <>
       <Grid
@@ -46,42 +26,42 @@ const AssignGroupsPanel = ({
       >
         <Grid item>
           <GroupInputField
-            isDisabled={subject.groupsPerLecture === 0.0 ? true : false}
+            isDisabled={maxWyklad === 0.0 ? true : false}
             labelContent={"Wykład:"}
             setValue={setWyklad}
-            maxAmount={subject.groupsPerLecture}
+            maxAmount={maxWyklad}
           />
         </Grid>
         <Grid item>
           <GroupInputField
-            isDisabled={subject.groupsPerExercise === 0.0 ? true : false}
+            isDisabled={maxCwicz === 0.0 ? true : false}
             labelContent={"Ćwiczenia:"}
             setValue={setCwicz}
-            maxAmount={subject.groupsPerExercise}
+            maxAmount={maxCwicz}
           />
         </Grid>
         <Grid item>
           <GroupInputField
-            isDisabled={subject.groupsPerLaboratory === 0.0 ? true : false}
+            isDisabled={maxLab === 0.0 ? true : false}
             labelContent={"Laboratorium:"}
             setValue={setLab}
-            maxAmount={subject.groupsPerLaboratory}
+            maxAmount={maxLab}
           />
         </Grid>
         <Grid item>
           <GroupInputField
-            isDisabled={subject.groupsPerProject === 0.0 ? true : false}
+            isDisabled={maxProj === 0.0 ? true : false}
             labelContent={"Projekt:"}
             setValue={setProj}
-            maxAmount={subject.groupsPerProject}
+            maxAmount={maxProj}
           />
         </Grid>
         <Grid item>
           <GroupInputField
-            isDisabled={subject.groupsPerSeminary === 0.0 ? true : false}
+            isDisabled={maxSemin === 0.0 ? true : false}
             labelContent={"Seminarium:"}
             setValue={setSemin}
-            maxAmount={subject.groupsPerSeminary}
+            maxAmount={maxSemin}
           />
         </Grid>
         <Grid item>

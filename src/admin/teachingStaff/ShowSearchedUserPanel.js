@@ -16,6 +16,16 @@ const ShowSearchedUserPanel = ({
   nazwisko,
   setStep,
   setUserId,
+  maxWyklad,
+  maxSemin,
+  maxCwicz,
+  maxLab,
+  maxProj,
+  setMaxWyklad,
+  setMaxSemin,
+  setMaxCwicz,
+  setMaxLab,
+  setMaxProj,
 }) => {
   function handleClick() {
     setUserId(id);

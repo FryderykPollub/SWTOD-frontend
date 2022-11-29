@@ -14,6 +14,7 @@ const SubmitPanel = ({
   lab,
   proj,
   semin,
+  setReload,
 }) => {
   const [jwt, setJwt] = useLocalStorage("", "jwt");
   const [subject, setSubject] = useState("");
@@ -38,6 +39,7 @@ const SubmitPanel = ({
       console.log(response.status);
     });
 
+    setReload(true);
     setOpen(false);
     setStep(0);
   }

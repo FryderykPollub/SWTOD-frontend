@@ -18,10 +18,25 @@ const ShowSearchedSubjectPanel = ({
   rokSt,
   setSubjectId,
   setStep,
+  maxWyklad,
+  maxSemin,
+  maxCwicz,
+  maxLab,
+  maxProj,
+  setMaxWyklad,
+  setMaxSemin,
+  setMaxCwicz,
+  setMaxLab,
+  setMaxProj,
 }) => {
   function handleClick() {
     setSubjectId(subjectId);
     setStep(2);
+    setMaxWyklad(maxWyklad);
+    setMaxSemin(maxSemin);
+    setMaxCwicz(maxCwicz);
+    setMaxLab(maxLab);
+    setMaxProj(maxProj);
   }
 
   return (

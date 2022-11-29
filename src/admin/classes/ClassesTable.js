@@ -108,7 +108,7 @@ const ClassesTable = () => {
             <Select
               fullWidth
               value={selection}
-              onChange={(e) => setSelection(e.target.value)}
+              onChange={(e) => handleSelection(e.target.value)}
             >
               {academicYears.map((el, i) => (
                 <MenuItem value={i}>{el}</MenuItem>

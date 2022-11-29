@@ -24,8 +24,9 @@ import ShowSearchedUserPanel from "./ShowSearchedUserPanel";
 import ShowSearchedSubjectPanel from "./ShowSearchedSubjectPanel";
 import AssignGroupsPanel from "./AssignGroupsPanel";
 import SubmitPanel from "./SubmitPanel";
+import CloseIcon from "@mui/icons-material/Close";
 
-const BindClassButton = () => {
+const BindClassButton = ({ rokAkadem, setReload }) => {
   const [jwt, setJwt] = useLocalStorage("", "jwt");
 
   const [open, setOpen] = useState(false);
@@ -44,6 +45,11 @@ const BindClassButton = () => {
   const [cwicz, setCwicz] = useState("");
   const [lab, setLab] = useState("");
   const [proj, setProj] = useState("");
+  const [maxWyklad, setMaxWyklad] = useState("");
+  const [maxSemin, setMaxSemin] = useState("");
+  const [maxCwicz, setMaxCwicz] = useState("");
+  const [maxLab, setMaxLab] = useState("");
+  const [maxProj, setMaxProj] = useState("");
 
   function loadUsers() {
     let statusResponse;
@@ -66,7 +72,13 @@ const BindClassButton = () => {
   function loadSubjects() {
     let statusResponse;
 
-    fetchApi(BASE_URL + "/api/plan-year-subject/all", "GET", jwt, null)
+    fetchApi(
+      BASE_URL +
+        `/api/plan-year-subject/academic-year?academicYear=${rokAkadem}`,
+      "GET",
+      jwt,
+      null
+    )
       .then((res) => {
         statusResponse = res.status;
         return res.json();
@@ -89,15 +101,42 @@ const BindClassButton = () => {
   return (
     <>
       <Tooltip title="Przypisz przedmiot do prowadzącego" enterDelay={500}>
-        <IconButton onClick={() => setOpen(true)}>
+        <IconButton
+          onClick={() => {
+            setOpen(true);
+            setStep(0);
+          }}
+        >
           <AddBoxIcon />
         </IconButton>
       </Tooltip>
       <Dialog open={open} maxWidth={"md"} fullWidth>
         <DialogTitle>
-          <Typography noWrap variant="h4" align="center" m={2} mr={6} ml={6}>
-            Przypisz przedmiot do prowadzącego
-          </Typography>
+          <Grid
+            container
+            direction="row"
+            justifyContent="space-evenly"
+            alignItems="center"
+            sx={{ ml: 3 }}
+          >
+            <Grid item>
+              <Typography
+                noWrap
+                variant="h4"
+                align="center"
+                m={2}
+                mr={6}
+                ml={6}
+              >
+                Przypisz przedmiot do prowadzącego
+              </Typography>
+            </Grid>
+            <Grid item>
+              <IconButton onClick={() => setOpen(false)}>
+                <CloseIcon />
+              </IconButton>
+            </Grid>
+          </Grid>
         </DialogTitle>
         <DialogContent>
           <Box sx={{ width: "100%" }}>
@@ -150,6 +189,16 @@ const BindClassButton = () => {
                           rokSt={el.year}
                           setSubjectId={setSubjectId}
                           setStep={setStep}
+                          maxWyklad={el.groupsPerLecture}
+                          maxSemin={el.groupsPerSeminary}
+                          maxCwicz={el.groupsPerExercise}
+                          maxLab={el.groupsPerLaboratory}
+                          maxProj={el.groupsPerProject}
+                          setMaxWyklad={setMaxWyklad}
+                          setMaxSemin={setMaxSemin}
+                          setMaxCwicz={setMaxCwicz}
+                          setMaxLab={setMaxLab}
+                          setMaxProj={setMaxProj}
                           key={el.subjectId}
                         />
                       </Grid>
@@ -163,12 +212,16 @@ const BindClassButton = () => {
               ) : step === 2 ? (
                 <AssignGroupsPanel
                   setStep={setStep}
-                  subjectId={subjectId}
                   setWyklad={setWyklad}
                   setCwicz={setCwicz}
                   setLab={setLab}
                   setProj={setProj}
                   setSemin={setSemin}
+                  maxWyklad={maxWyklad}
+                  maxSemin={maxSemin}
+                  maxCwicz={maxCwicz}
+                  maxLab={maxLab}
+                  maxProj={maxProj}
                 />
               ) : (
                 <>
@@ -182,6 +235,7 @@ const BindClassButton = () => {
                     lab={lab}
                     proj={proj}
                     semin={semin}
+                    setReload={setReload}
                   />
                 </>
               )}

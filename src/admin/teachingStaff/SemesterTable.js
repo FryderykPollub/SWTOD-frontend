@@ -27,6 +27,7 @@ const SemesterTable = () => {
   const [rokAkadem, setRokAkadem] = useState("2022/2023");
   const [nameFilter, setNameFilter] = useState("");
   const [subjectFilter, setSubjectFilter] = useState("");
+  const [reload, setReload] = useState(false);
 
   function handleSelection(val) {
     setSelection(val);
@@ -83,6 +84,13 @@ const SemesterTable = () => {
     getTeachingStuff(nameFilter, subjectFilter);
   }, [nameFilter, subjectFilter]);
 
+  useEffect(() => {
+    if (reload) {
+      getTeachingStuff(nameFilter, subjectFilter);
+      setReload(false);
+    }
+  }, [reload]);
+
   return (
     <>
       <Grid item width="90%">
@@ -123,7 +131,10 @@ const SemesterTable = () => {
                 <TableHead>
                   <TableRow>
                     <TableCell>
-                      <BindClassButton />
+                      <BindClassButton
+                        rokAkadem={rokAkadem}
+                        setReload={setReload}
+                      />
                     </TableCell>
                     <TableCell>
                       <Typography variant="h6">Prowadzący</Typography>
@@ -152,12 +163,18 @@ const SemesterTable = () => {
                     <TableCell>
                       <Typography variant="h6">Status</Typography>
                     </TableCell>
+                    <TableCell align="center">
+                      <Typography variant="h6">Opcje</Typography>
+                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {subjects.map((el, i) => (
                     <ClassCollapsibleRow
+                      setReload={setReload}
                       userId={el.userId}
+                      subjectId={el.subjectId}
+                      rokAkadem={rokAkadem}
                       wydzial={el.facultyName}
                       przedmiot={el.subjectName}
                       kierunek={el.fieldOfStudiesName}

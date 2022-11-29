@@ -1,7 +1,27 @@
 import { Grid, TextField, Typography } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 
 const GroupInputField = ({ isDisabled, labelContent, setValue, maxAmount }) => {
+  const [tempValue, setTempValue] = useState("");
+
+  function validate(val) {
+    if (val >= 0 && val <= maxAmount) {
+      setValue(val);
+      setTempValue(val);
+    } else {
+      if (val < 0) {
+        setValue(0);
+        setTempValue(0);
+      } else if (val > maxAmount) {
+        setValue(maxAmount);
+        setTempValue(maxAmount);
+      } else {
+        setValue(0);
+        setTempValue(0);
+      }
+    }
+  }
+
   return (
     <>
       <Grid
@@ -19,7 +39,8 @@ const GroupInputField = ({ isDisabled, labelContent, setValue, maxAmount }) => {
             disabled={isDisabled}
             label="Liczba grup"
             variant="standard"
-            onChange={(e) => setValue(e.target.value)}
+            value={tempValue}
+            onChange={(e) => validate(e.target.value)}
             size="small"
           />
         </Grid>

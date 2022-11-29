@@ -16,9 +16,14 @@ import React, { useEffect, useState } from "react";
 import fetchApi from "../../service/FetchService";
 import { BASE_URL } from "../../util/globalVars";
 import { useLocalStorage } from "../../util/useLocalStorage";
+import EditAssignment from "./EditAssignment";
+import DeleteAssignment from "./DeleteAssignment";
 
 const ClassCollapsibleRow = ({
+  setReload,
   userId,
+  subjectId,
+  rokAkadem,
   wydzial,
   przedmiot,
   kierunek,
@@ -90,7 +95,7 @@ const ClassCollapsibleRow = ({
     } else if (status === "zaakceptowany") {
       setStatusColor("lightgreen");
     } else {
-      setStatusColor("white");
+      setStatusColor("goldenrod");
     }
   }
 
@@ -118,7 +123,19 @@ const ClassCollapsibleRow = ({
         <TableCell>
           <Typography color={statusColor}>{status}</Typography>
         </TableCell>
-        <TableCell />
+        <TableCell align="center">
+          <EditAssignment
+            setReload={setReload}
+            userId={userId}
+            subjectId={subjectId}
+            rokAkadem={rokAkadem}
+          />
+          <DeleteAssignment
+            setReload={setReload}
+            userId={userId}
+            subjectId={subjectId}
+          />
+        </TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
