@@ -11,7 +11,6 @@ import {
   Step,
   StepLabel,
   Stepper,
-  TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
@@ -23,7 +22,6 @@ import fetchApi from "../../service/FetchService";
 import { BASE_URL } from "../../util/globalVars";
 import ShowSearchedUserPanel from "./ShowSearchedUserPanel";
 import ShowSearchedSubjectPanel from "./ShowSearchedSubjectPanel";
-import GroupInputField from "./GroupInputPanel";
 import AssignGroupsPanel from "./AssignGroupsPanel";
 import SubmitPanel from "./SubmitPanel";
 
@@ -152,6 +150,7 @@ const BindClassButton = () => {
                           rokSt={el.year}
                           setSubjectId={setSubjectId}
                           setStep={setStep}
+                          key={el.subjectId}
                         />
                       </Grid>
                     ))}

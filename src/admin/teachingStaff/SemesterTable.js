@@ -1,6 +1,5 @@
 import {
   Grid,
-  IconButton,
   MenuItem,
   Paper,
   Select,
@@ -10,23 +9,29 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Tooltip,
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import ClassCollapsibleRow from "./ClassCollapsibleRow";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
-import { DATA } from "./ExampleData";
 import BindClassButton from "./BindClassButton";
 import fetchApi from "../../service/FetchService";
 import { BASE_URL } from "../../util/globalVars";
 import { useLocalStorage } from "../../util/useLocalStorage";
+import Filters from "./Filters";
 
 const SemesterTable = () => {
   const [jwt, setJwt] = useLocalStorage("", "jwt");
   const [academicYears, setAcademicYears] = useState([]);
-  const [selection, setSelection] = useState(3);
-  const [subjects, setSubjects] = useState(DATA);
+  const [selection, setSelection] = useState(0);
+  const [subjects, setSubjects] = useState([]);
+  const [rokAkadem, setRokAkadem] = useState("2022/2023");
+  const [nameFilter, setNameFilter] = useState("");
+  const [subjectFilter, setSubjectFilter] = useState("");
+
+  function handleSelection(val) {
+    setSelection(val);
+    setRokAkadem(academicYears[val]);
+  }
 
   function getAcademicYears() {
     let responseStatus;
@@ -48,109 +53,137 @@ const SemesterTable = () => {
       });
   }
 
+  function getTeachingStuff(nameSurname, subjectName) {
+    let responseStatus;
+
+    fetchApi(
+      BASE_URL +
+        `/api/plan-year-subject-user/filters?academicYear=${rokAkadem}&userNameSurname=${nameSurname}&subjectName=${subjectName}`,
+      "GET",
+      jwt,
+      null
+    )
+      .then((res) => {
+        responseStatus = res.status;
+        return res.json();
+      })
+      .then((body) => {
+        if (responseStatus === 200) {
+          setSubjects(body);
+        }
+      });
+  }
+
   useEffect(() => {
     getAcademicYears();
+    getTeachingStuff("", "");
   }, []);
+
+  useEffect(() => {
+    getTeachingStuff(nameFilter, subjectFilter);
+  }, [nameFilter, subjectFilter]);
 
   return (
     <>
       <Grid item width="90%">
-        <Grid
-          container
-          direction="row"
-          justifyContent="center"
-          alignItems="center"
-          sx={{ mb: 3 }}
-          spacing={2}
-        >
+        <Grid container direction="column">
           <Grid item>
-            <Typography variant="h4" textAlign="center">
-              Obsada na rok:
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Select
-              fullWidth
-              value={selection}
-              onChange={(e) => setSelection(e.target.value)}
+            <Grid
+              container
+              direction="row"
+              justifyContent="center"
+              alignItems="center"
+              sx={{ mb: 3 }}
+              spacing={2}
             >
-              {academicYears.map((el, i) => (
-                <MenuItem value={i}>{el}</MenuItem>
-              ))}
-              {/* <MenuItem value={1}>{"2020/2021"}</MenuItem>
-              <MenuItem value={2}>{"2021/2022"}</MenuItem>
-              <MenuItem value={3}>{"2022/2023"}</MenuItem> */}
-            </Select>
+              <Grid item>
+                <Typography variant="h4" textAlign="center">
+                  Obsada na rok:
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Select
+                  fullWidth
+                  value={selection}
+                  onChange={(e) => handleSelection(e.target.value)}
+                >
+                  {academicYears.map((el, i) => (
+                    <MenuItem value={i}>{el}</MenuItem>
+                  ))}
+                </Select>
+              </Grid>
+            </Grid>
           </Grid>
           <Grid item>
-            <Tooltip title="Utwórz nowy rok akademicki" enterDelay={500}>
-              <IconButton>
-                <AddCircleIcon />
-              </IconButton>
-            </Tooltip>
+            <Filters setName={setNameFilter} setSubject={setSubjectFilter} />
+          </Grid>
+          <Grid item>
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>
+                      <BindClassButton />
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="h6">Prowadzący</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="h6">Wydział</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="h6">Przedmiot</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="h6">Kierunek</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="h6">Rodzaj studiów</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="h6">Rok</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="h6">Semestr</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="h6">Liczba tygodni</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="h6">Status</Typography>
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {subjects.map((el, i) => (
+                    <ClassCollapsibleRow
+                      userId={el.userId}
+                      wydzial={el.facultyName}
+                      przedmiot={el.subjectName}
+                      kierunek={el.fieldOfStudiesName}
+                      rodzaj={el.studiesTypeName}
+                      rok={el.year}
+                      semestr={el.semesterNumber}
+                      lTyg={el.noWeeks}
+                      godzWyklad={el.lectureHoursPerWeek}
+                      grupWyklad={el.groupsPerLecture}
+                      godzSemin={el.seminaryHoursPerWeek}
+                      grupSemin={el.groupsPerSeminary}
+                      godzCwicz={el.exerciseHoursPerWeek}
+                      grupCwicz={el.groupsPerExercise}
+                      godzLab={el.laboratoryHoursPerWeek}
+                      grupLab={el.groupsPerLaboratory}
+                      godzProj={el.projectHoursPerWeek}
+                      grupProj={el.groupsPerProject}
+                      status={el.statusName}
+                      key={i}
+                    />
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
           </Grid>
         </Grid>
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>
-                  <BindClassButton />
-                </TableCell>
-                <TableCell>
-                  <Typography variant="h6">Prowadzący</Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="h6">Wydział</Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="h6">Przedmiot</Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="h6">Kierunek</Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="h6">Rodzaj studiów</Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="h6">Rok</Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="h6">Semestr</Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="h6">Liczba tygodni</Typography>
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {subjects.map((el, i) => (
-                <ClassCollapsibleRow
-                  prowadzacy={el.prowadzacy}
-                  wydzial={el.wydzial}
-                  przedmiot={el.przedmiot}
-                  kierunek={el.kierunek}
-                  rodzaj={el.rodzaj}
-                  rok={el.rok}
-                  semestr={el.semestr}
-                  isZim={el.isZim}
-                  lTyg={el.lTyg}
-                  godzWyklad={el.godzWyklad}
-                  grupWyklad={el.grupWyklad}
-                  godzSemin={el.godzSemin}
-                  grupSemin={el.grupSemin}
-                  godzCwicz={el.godzCwicz}
-                  grupCwicz={el.grupCwicz}
-                  godzLab={el.godzLab}
-                  grupLab={el.grupLab}
-                  godzProj={el.godzProj}
-                  grupProj={el.grupProj}
-                  key={i}
-                />
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
       </Grid>
     </>
   );

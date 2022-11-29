@@ -12,17 +12,19 @@ import {
 } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import fetchApi from "../../service/FetchService";
+import { BASE_URL } from "../../util/globalVars";
+import { useLocalStorage } from "../../util/useLocalStorage";
 
 const ClassCollapsibleRow = ({
-  prowadzacy,
+  userId,
   wydzial,
   przedmiot,
   kierunek,
   rodzaj,
   rok,
   semestr,
-  isZim,
   lTyg,
   godzWyklad,
   grupWyklad,
@@ -34,14 +36,68 @@ const ClassCollapsibleRow = ({
   grupLab,
   godzProj,
   grupProj,
+  status,
 }) => {
   const [open, setOpen] = useState(false);
+  const [jwt, setJwt] = useLocalStorage("", "jwt");
+  const [userName, setUserName] = useState("");
+  const [userSurname, setUserSurname] = useState("");
+  const [kierunekName, setKierunekName] = useState("");
+  const [rodzajName, setRodzajName] = useState("");
+  const [statusColor, setStatusColor] = useState("");
 
   const sumWyklad = godzWyklad * grupWyklad;
   const sumSemin = godzSemin * grupSemin;
   const sumCwicz = godzCwicz * grupCwicz;
   const sumLab = godzLab * grupLab;
   const sumProj = godzProj * grupProj;
+
+  function getUserById() {
+    let statusResponse;
+
+    fetchApi(BASE_URL + `/api/user/${userId}`, "GET", jwt, null)
+      .then((response) => {
+        statusResponse = response.status;
+        return response.json();
+      })
+      .then((body) => {
+        if (statusResponse === 200) {
+          setUserName(body.name);
+          setUserSurname(body.surname);
+        }
+      });
+  }
+
+  function setNames() {
+    if (kierunek === "I") {
+      setKierunekName("Informatyka");
+    } else {
+      setKierunekName("Elektrotechnika");
+    }
+
+    if (rodzaj === "IST") {
+      setRodzajName("Inżynierskie Stacjonarne");
+    } else if (rodzaj === "INS") {
+      setRodzajName("Inżynierskie Niestacjonarne");
+    } else if (rodzaj === "MST") {
+      setRodzajName("Magisterskie Stacjonarne");
+    } else if (rodzaj === "MNS") {
+      setRodzajName("Magisterskie Niestacjonarne");
+    }
+
+    if (status === "odrzucony") {
+      setStatusColor("red");
+    } else if (status === "zaakceptowany") {
+      setStatusColor("lightgreen");
+    } else {
+      setStatusColor("white");
+    }
+  }
+
+  useEffect(() => {
+    getUserById();
+    setNames();
+  }, []);
 
   return (
     <>
@@ -51,14 +107,17 @@ const ClassCollapsibleRow = ({
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell>{prowadzacy}</TableCell>
+        <TableCell>{userName + " " + userSurname}</TableCell>
         <TableCell>{wydzial}</TableCell>
         <TableCell>{przedmiot}</TableCell>
-        <TableCell>{kierunek}</TableCell>
-        <TableCell>{rodzaj}</TableCell>
+        <TableCell>{kierunekName}</TableCell>
+        <TableCell>{rodzajName}</TableCell>
         <TableCell>{rok}</TableCell>
         <TableCell>{semestr}</TableCell>
         <TableCell>{lTyg}</TableCell>
+        <TableCell>
+          <Typography color={statusColor}>{status}</Typography>
+        </TableCell>
         <TableCell />
       </TableRow>
       <TableRow>
@@ -66,7 +125,7 @@ const ClassCollapsibleRow = ({
           <Collapse in={open} timeout="auto" unmountOnExit sx={{ m: 3 }}>
             <Box>
               <Typography variant="h6" textAlign="center" sx={{ mb: 1.5 }}>
-                Semestr {isZim ? "zimowy" : "letni"}
+                Semestr {semestr % 2 === 0 ? "zimowy" : "letni"}
               </Typography>
               <Table size="small" aria-label="purchases">
                 <TableHead>
