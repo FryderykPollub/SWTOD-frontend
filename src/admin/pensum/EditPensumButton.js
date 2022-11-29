@@ -14,29 +14,28 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import React, { useState } from "react";
 import { Box } from "@mui/system";
+import { useLocalStorage } from "../../util/useLocalStorage";
+import fetchApi from "../../service/FetchService";
+import { BASE_URL } from "../../util/globalVars";
 
-const EditPensumButton = () => {
+const EditPensumButton = ({ id, setReload }) => {
+  const [jwt, setJwt] = useLocalStorage("", "jwt");
   const [open, setOpen] = useState(false);
   const [infoOpen, setInfoOpen] = useState(false);
-  const [alertSeverity, setSeverity] = useState("");
-  const [alertTitle, setAlertTitle] = useState("");
-  const [message, setMessage] = useState("");
-  const [flag, setFlag] = useState(true);
+  const [errorOpen, setErrorOpen] = useState(false);
 
-  function setSnackbar() {
-    if (flag) {
-      setSeverity("success");
-      setAlertTitle("Sukces!");
-      setMessage("Pensum zostało zaktalizowane");
-      setFlag(false);
-    } else {
-      setSeverity("error");
-      setAlertTitle("Błąd!");
-      setMessage("Nie udało się zaktualizować pensum");
-      setFlag(true);
-    }
-    setInfoOpen(true);
+  function editPensum() {
+    fetchApi(BASE_URL + `/api/pensum/${id}/update`, "PUT", jwt, null).then(
+      (res) => {
+        if (res.status === 200) {
+          setInfoOpen(true);
+        } else {
+          setErrorOpen(true);
+        }
+      }
+    );
     setOpen(false);
+    setReload(true);
   }
 
   return (
@@ -65,7 +64,7 @@ const EditPensumButton = () => {
           <Button
             variant="contained"
             onClick={() => {
-              setSnackbar();
+              editPensum();
             }}
           >
             Potwierdź
@@ -80,11 +79,25 @@ const EditPensumButton = () => {
       >
         <Alert
           onClose={() => setInfoOpen(false)}
-          severity={alertSeverity}
+          severity="success"
           sx={{ width: "100%" }}
         >
-          <AlertTitle>{alertTitle}</AlertTitle>
-          {message}
+          <AlertTitle>Sukces!</AlertTitle>
+          Pomyślnie zaktualizowano pensum
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={errorOpen}
+        autoHideDuration={3000}
+        onClose={() => setErrorOpen(false)}
+      >
+        <Alert
+          onClose={() => setErrorOpen(false)}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
+          <AlertTitle>Błąd!</AlertTitle>
+          Nie udało się zaktualizować pensum
         </Alert>
       </Snackbar>
     </>

@@ -16,7 +16,6 @@ import fetchApi from "../../service/FetchService";
 import { BASE_URL } from "../../util/globalVars";
 import { useLocalStorage } from "../../util/useLocalStorage";
 import PensumDetailsRow from "./PensumDetailsRow";
-import CheckCorrectnessButton from "./CheckCorrectnessButton";
 
 const PensumTable = () => {
   const [jwt, setJwt] = useLocalStorage("", "jwt");
@@ -97,9 +96,6 @@ const PensumTable = () => {
               ))}
             </Select>
           </Grid>
-          <Grid item>
-            <CheckCorrectnessButton />
-          </Grid>
         </Grid>
 
         <TableContainer component={Paper}>
@@ -139,8 +135,9 @@ const PensumTable = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {pensum.map((el, i) => (
+              {pensum.map((el) => (
                 <PensumDetailsRow
+                  id={el.userId}
                   name={el.name}
                   surname={el.surname}
                   title={el.title}
@@ -150,7 +147,7 @@ const PensumTable = () => {
                   ileNadgodzin={el.overtimeHoursNumber}
                   procPensum={el.percentOfOvertimeHours}
                   isPoprawne={el.isCorrect}
-                  key={i}
+                  key={el.userId}
                 />
               ))}
             </TableBody>
