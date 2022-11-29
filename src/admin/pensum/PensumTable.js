@@ -1,19 +1,14 @@
 import {
-  Alert,
-  AlertTitle,
   Grid,
-  IconButton,
   MenuItem,
   Paper,
   Select,
-  Snackbar,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Tooltip,
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
@@ -21,14 +16,19 @@ import fetchApi from "../../service/FetchService";
 import { BASE_URL } from "../../util/globalVars";
 import { useLocalStorage } from "../../util/useLocalStorage";
 import PensumDetailsRow from "./PensumDetailsRow";
-import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
 import CheckCorrectnessButton from "./CheckCorrectnessButton";
 
 const PensumTable = () => {
   const [jwt, setJwt] = useLocalStorage("", "jwt");
   const [users, setUsers] = useState([]);
-  const [selection, setSelection] = useState(3);
-  const [reload, setReload] = useState(false);
+  const [selection, setSelection] = useState(0);
+  const [rokAkadem, setRokAkadem] = useState("2022/2023");
+  const [academicYears, setAcademicYears] = useState([]);
+
+  function handleSelection(val) {
+    setSelection(val);
+    setRokAkadem(academicYears[val]);
+  }
 
   function getUsers() {
     let statusResponse;
@@ -45,8 +45,29 @@ const PensumTable = () => {
       });
   }
 
+  function getAcademicYears() {
+    let responseStatus;
+
+    fetchApi(
+      BASE_URL + `/api/plan-year-subject-user/academic-years`,
+      "GET",
+      jwt,
+      null
+    )
+      .then((res) => {
+        responseStatus = res.status;
+        return res.json();
+      })
+      .then((body) => {
+        if (responseStatus === 200) {
+          setAcademicYears(body);
+        }
+      });
+  }
+
   useEffect(() => {
     getUsers();
+    getAcademicYears();
   }, []);
 
   return (
@@ -69,11 +90,11 @@ const PensumTable = () => {
             <Select
               fullWidth
               value={selection}
-              onChange={(e) => setSelection(e.target.value)}
+              onChange={(e) => handleSelection(e.target.value)}
             >
-              <MenuItem value={1}>{"2020/2021"}</MenuItem>
-              <MenuItem value={2}>{"2021/2022"}</MenuItem>
-              <MenuItem value={3}>{"2022/2023"}</MenuItem>
+              {academicYears.map((el, i) => (
+                <MenuItem value={i}>{el}</MenuItem>
+              ))}
             </Select>
           </Grid>
           <Grid item>
