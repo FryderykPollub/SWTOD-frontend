@@ -36,7 +36,7 @@ const DeleteAssignment = ({ setReload, userId, subjectId }) => {
         setOpenError(true);
       }
     });
-
+    setOpen(false);
     setReload(true);
   }
 

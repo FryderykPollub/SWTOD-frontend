@@ -1,6 +1,8 @@
 import {
   Grid,
+  MenuItem,
   Paper,
+  Select,
   Table,
   TableBody,
   TableCell,
@@ -14,18 +16,119 @@ import { useLocalStorage } from "../../util/useLocalStorage";
 import fetchApi from "../../service/FetchService";
 import { BASE_URL } from "../../util/globalVars";
 import CollapsibleRowGroups from "./CollapsibleRowGroups";
-import { DATA } from "./MockData";
 
 const GroupsTable = () => {
   const [jwt, setJwt] = useLocalStorage("", "jwt");
-  const [subjects, setSubjects] = useState(DATA);
+  const [username, setUsername] = useLocalStorage("", "user");
+  const [userId, setUserId] = useState("");
+  const [subjects, setSubjects] = useState([]);
+  const [selection, setSelection] = useState(0);
+  const [rokAkadem, setRokAkadem] = useState("2022/2023");
+  const [academicYears, setAcademicYears] = useState([]);
+  const [reload, setReload] = useState(false);
+
+  function handleSelection(val) {
+    setSelection(val);
+    setRokAkadem(academicYears[val]);
+  }
+
+  function getUser() {
+    let statusResponse;
+
+    fetchApi(BASE_URL + `/api/user?username=${username}`, "GET", jwt, null)
+      .then((response) => {
+        statusResponse = response.status;
+        return response.json();
+      })
+      .then((body) => {
+        if (statusResponse === 200) {
+          setUserId(body.id);
+        }
+      });
+  }
+
+  function getAcademicYears() {
+    let responseStatus;
+
+    fetchApi(
+      BASE_URL + `/api/plan-year-subject-user/academic-years`,
+      "GET",
+      jwt,
+      null
+    )
+      .then((res) => {
+        responseStatus = res.status;
+        return res.json();
+      })
+      .then((body) => {
+        if (responseStatus === 200) {
+          setAcademicYears(body);
+        }
+      });
+  }
+
+  function getTeachingStuff() {
+    let responseStatus;
+
+    fetchApi(
+      BASE_URL +
+        `/api/plan-year-subject-user/filters?academicYear=${rokAkadem}`,
+      "GET",
+      jwt,
+      null
+    )
+      .then((res) => {
+        responseStatus = res.status;
+        return res.json();
+      })
+      .then((body) => {
+        if (responseStatus === 200) {
+          setSubjects(body);
+        }
+      });
+  }
+
+  useEffect(() => {
+    getUser();
+    getTeachingStuff();
+    getAcademicYears();
+  }, []);
+
+  useEffect(() => {
+    if (reload) {
+      getTeachingStuff();
+      setReload(false);
+    }
+  }, [reload]);
 
   return (
     <>
       <Grid item width="90%">
-        <Typography variant="h4" sx={{ mb: 3 }} textAlign="center">
-          Przedmioty
-        </Typography>
+        <Grid
+          container
+          direction="row"
+          justifyContent="center"
+          alignItems="stretch"
+          sx={{ mb: 1 }}
+          spacing={2}
+        >
+          <Grid item>
+            <Typography variant="h4" sx={{ mb: 3 }} textAlign="center">
+              Grupy na rok:
+            </Typography>
+          </Grid>
+          <Grid item mt={-1}>
+            <Select
+              fullWidth
+              value={selection}
+              onChange={(e) => handleSelection(e.target.value)}
+            >
+              {academicYears.map((el, i) => (
+                <MenuItem value={i}>{el}</MenuItem>
+              ))}
+            </Select>
+          </Grid>
+        </Grid>
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
@@ -47,33 +150,40 @@ const GroupsTable = () => {
                   <Typography variant="h6">Rok studiów</Typography>
                 </TableCell>
                 <TableCell align="center">
-                  <Typography variant="h6">Opcje</Typography>
+                  <Typography variant="h6">Status</Typography>
                 </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {subjects.map((element) => (
-                <CollapsibleRowGroups
-                  id={element.subjectId}
-                  wydzial={element.facultyName}
-                  przedmiot={element.subjectName}
-                  kierunek={element.fieldOfStudiesName}
-                  rodzajSt={element.typeOfStudiesName}
-                  rokSt={element.year}
-                  isZim={element.semesterType === "Z" ? true : false}
-                  godzWyklad={element.lectureHoursNumberPerWeek}
-                  godzSemin={element.seminaryHoursNumberPerWeek}
-                  godzCwicz={element.exerciseHoursNumberPerWeek}
-                  godzLab={element.laboratoryHoursNumberPerWeek}
-                  godzProj={element.projectHoursNumberPerWeek}
-                  grWyklad={element.groupsPerLecture}
-                  grSemin={element.groupsPerSeminary}
-                  grCwicz={element.groupsPerExercise}
-                  grLab={element.groupsPerLaboratory}
-                  grProj={element.groupsPerProject}
-                  key={element.subjectId}
-                />
-              ))}
+              {subjects.map((element) =>
+                element.userId === userId ? (
+                  <CollapsibleRowGroups
+                    setReload={setReload}
+                    userId={element.userId}
+                    subjectId={element.subjectId}
+                    status={element.statusName}
+                    wydzial={element.facultyName}
+                    przedmiot={element.subjectName}
+                    kierunek={element.fieldOfStudiesName}
+                    rodzajSt={element.studiesTypeName}
+                    rokSt={element.year}
+                    isZim={element.semesterType === "Z" ? true : false}
+                    godzWyklad={element.lectureHoursPerWeek}
+                    godzSemin={element.seminaryHoursPerWeek}
+                    godzCwicz={element.exerciseHoursPerWeek}
+                    godzLab={element.laboratoryHoursPerWeek}
+                    godzProj={element.projectHoursPerWeek}
+                    grWyklad={element.groupsPerLecture}
+                    grSemin={element.groupsPerSeminary}
+                    grCwicz={element.groupsPerExercise}
+                    grLab={element.groupsPerLaboratory}
+                    grProj={element.groupsPerProject}
+                    key={element.subjectId}
+                  />
+                ) : (
+                  <></>
+                )
+              )}
             </TableBody>
           </Table>
         </TableContainer>

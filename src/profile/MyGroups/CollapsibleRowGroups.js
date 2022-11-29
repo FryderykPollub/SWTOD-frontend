@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import {
   Box,
   Collapse,
+  Divider,
   IconButton,
   Table,
   TableBody,
@@ -16,13 +17,15 @@ import AcceptClassButton from "./AcceptClassButton";
 import DeclineClassButton from "./DeclineClassButton";
 
 const CollapsibleRowGroups = ({
-  id,
+  setReload,
+  userId,
+  subjectId,
+  status,
   wydzial,
   przedmiot,
   kierunek,
   rodzajSt,
   rokSt,
-  semestr,
   isZim,
   godzWyklad,
   godzSemin,
@@ -36,6 +39,45 @@ const CollapsibleRowGroups = ({
   grProj,
 }) => {
   const [open, setOpen] = useState(false);
+  const [kierunekName, setKierunekName] = useState("");
+  const [rodzajName, setRodzajName] = useState("");
+  const [statusColor, setStatusColor] = useState("");
+
+  const sumWyklad = godzWyklad * grWyklad;
+  const sumSemin = godzSemin * grSemin;
+  const sumCwicz = godzCwicz * grCwicz;
+  const sumLab = godzLab * grLab;
+  const sumProj = godzProj * grProj;
+
+  function setNames() {
+    if (kierunek === "I") {
+      setKierunekName("Informatyka");
+    } else {
+      setKierunekName("Elektrotechnika");
+    }
+
+    if (rodzajSt === "IST") {
+      setRodzajName("Inżynierskie Stacjonarne");
+    } else if (rodzajSt === "INS") {
+      setRodzajName("Inżynierskie Niestacjonarne");
+    } else if (rodzajSt === "MST") {
+      setRodzajName("Magisterskie Stacjonarne");
+    } else if (rodzajSt === "MNS") {
+      setRodzajName("Magisterskie Niestacjonarne");
+    }
+
+    if (status === "odrzucony") {
+      setStatusColor("red");
+    } else if (status === "zaakceptowany") {
+      setStatusColor("lightgreen");
+    } else {
+      setStatusColor("goldenrod");
+    }
+  }
+
+  useEffect(() => {
+    setNames();
+  });
 
   return (
     <>
@@ -47,12 +89,28 @@ const CollapsibleRowGroups = ({
         </TableCell>
         <TableCell>{wydzial}</TableCell>
         <TableCell>{przedmiot}</TableCell>
-        <TableCell>{kierunek}</TableCell>
-        <TableCell>{rodzajSt}</TableCell>
+        <TableCell>{kierunekName}</TableCell>
+        <TableCell>{rodzajName}</TableCell>
         <TableCell>{rokSt}</TableCell>
         <TableCell align="center">
-          <AcceptClassButton />
-          <DeclineClassButton />
+          {status === "oczekujący" ? (
+            <>
+              <AcceptClassButton
+                userId={userId}
+                subjectId={subjectId}
+                setReload={setReload}
+              />
+              <DeclineClassButton
+                userId={userId}
+                subjectId={subjectId}
+                setReload={setReload}
+              />
+            </>
+          ) : (
+            <>
+              <Typography color={statusColor}>{status}</Typography>
+            </>
+          )}
         </TableCell>
       </TableRow>
       <TableRow>
@@ -91,6 +149,36 @@ const CollapsibleRowGroups = ({
                     <TableCell align="center">{grCwicz}</TableCell>
                     <TableCell align="center">{grLab}</TableCell>
                     <TableCell align="center">{grProj}</TableCell>
+                    <Divider orientation="vertical" sx={{ width: 20 }} />
+                    <TableCell align="center">
+                      <Typography fontWeight="bold">Razem</Typography>
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell align="right">
+                      <Typography fontWeight="bold">Podsumowanie</Typography>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Typography fontWeight="bold">{sumWyklad}</Typography>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Typography fontWeight="bold">{sumSemin}</Typography>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Typography fontWeight="bold">{sumCwicz}</Typography>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Typography fontWeight="bold">{sumLab}</Typography>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Typography fontWeight="bold">{sumProj}</Typography>
+                    </TableCell>
+                    <Divider orientation="vertical" />
+                    <TableCell align="center">
+                      <Typography fontWeight="bold">
+                        {sumWyklad + sumSemin + sumCwicz + sumLab + sumProj}
+                      </Typography>
+                    </TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
