@@ -15,6 +15,7 @@ import React, { useEffect, useState } from "react";
 import fetchApi from "../../service/FetchService";
 import { BASE_URL } from "../../util/globalVars";
 import { useLocalStorage } from "../../util/useLocalStorage";
+import CheckCorrectnessButton from "./CheckCorrectnessButton";
 import PensumDetailsRow from "./PensumDetailsRow";
 
 const PensumTable = () => {
@@ -102,6 +103,9 @@ const PensumTable = () => {
                 <MenuItem value={i}>{el}</MenuItem>
               ))}
             </Select>
+          </Grid>
+          <Grid item>
+            <CheckCorrectnessButton rokAkadem={rokAkadem} />
           </Grid>
         </Grid>
 
