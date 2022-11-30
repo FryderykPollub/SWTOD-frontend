@@ -1,45 +1,61 @@
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Divider,
-  Grid,
-  IconButton,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Grid, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import UpperBar from "../naviBar/UpperBar";
 import fetchApi from "../service/FetchService";
 import { useLocalStorage } from "../util/useLocalStorage";
 import Footer from "./Footer";
 import { BASE_URL } from "../util/globalVars";
-import SearchIcon from "@mui/icons-material/Search";
+import GroupsIcon from "@mui/icons-material/Groups";
+import GroupIcon from "@mui/icons-material/Group";
+import SchoolIcon from "@mui/icons-material/School";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
+import SummarizeIcon from "@mui/icons-material/Summarize";
+import AssignmentIcon from "@mui/icons-material/Assignment";
 
 const HomePage = () => {
-  // const [jwt, setJwt] = useLocalStorage("", "jwt");
-  // const navigate = useNavigate();
-  // const [valid, setValid] = useState(false);
+  const [jwt, setJwt] = useLocalStorage("", "jwt");
+  const [username, setUsername] = useLocalStorage("", "user");
+  const [valid, setValid] = useState(false);
+  const [name, setName] = useState("");
 
-  // function checkValidation() {
-  //   if (jwt) {
-  //     fetchApi(BASE_URL + `/validate`, "GET", jwt, null)
-  //       .then((response) => {
-  //         // console.log(response.status);
-  //         if (response.status === 200) setValid(true);
-  //         else setValid(false);
-  //       })
-  //       .catch((e) => {
-  //         // setValid(false);
-  //       });
-  //   } else setValid(false);
-  // }
+  function checkValidation() {
+    if (jwt) {
+      fetchApi(BASE_URL + `/api/user/is-user`, "GET", jwt, null)
+        .then((response) => {
+          if (response.status === 200) setValid(true);
+          else setValid(false);
+        })
+        .catch((e) => {
+          setValid(false);
+        });
+    } else setValid(false);
+  }
 
-  // useEffect(() => {
-  //   checkValidation();
-  // }, [jwt]);
+  function getUser() {
+    let statusResponse;
+
+    fetchApi(BASE_URL + `/api/user?username=${username}`, "GET", jwt, null)
+      .then((response) => {
+        statusResponse = response.status;
+        return response.json();
+      })
+      .then((body) => {
+        if (statusResponse === 200) {
+          setName(body.name);
+        }
+      });
+  }
+
+  useEffect(() => {
+    checkValidation();
+  }, []);
+
+  useEffect(() => {
+    if (valid) {
+      getUser();
+    }
+  }, [valid]);
 
   return (
     <Box>
@@ -59,54 +75,117 @@ const HomePage = () => {
             variant="h3"
             sx={{
               fontSize: 50,
-              mb: 5,
+              mb: 15,
               fontWeight: "bold",
             }}
           >
-            Wyszukiwanie rozpiski zajęć
+            System Wspomagający Tworzenie Obsady Dydaktycznej
           </Typography>
         </Grid>
-        <Grid
-          container
-          direction="column"
-          justifyContent="center"
-          alignItems="stretch"
-          spacing={2}
-        >
-          <Grid item xs={12} textAlign="center">
-            <Typography
-              variant="h3"
-              sx={{
-                fontSize: 26,
-                mb: 5,
-              }}>
-              Podaj nazwisko prowadzącego:
-            </Typography>
-          </Grid>
-          <Grid item xs={12} textAlign="center">
-            <Grid
-              container
-              direction="row"
-              justifyContent="center"
-              alignItems="center"
-              spacing={2}
-            >
-              <Grid item >
-                <TextField
-                  id="surname"
-                  label="Nazwisko"
-                  name="surname"
-                // onChange={(e) => setUsername(e.target.value)}
-                />
+
+        {valid ? (
+          <>
+            <Grid item>
+              <Typography variant="h4">
+                Witaj {name}, miło Cię widzieć!
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="h5" mt={6}>
+                Aby zacząć korzystać z systemu
+                <Button
+                  href="/profile"
+                  variant="text"
+                  size="large"
+                  sx={{
+                    fontSize: 20,
+                    fontWeight: "bold",
+                  }}
+                >
+                  kliknij tutaj
+                </Button>
+              </Typography>
+            </Grid>
+          </>
+        ) : (
+          <>
+            <Grid item>
+              <Typography variant="h5">
+                Aby móc korzystać z systemu musisz się{" "}
+                <Button
+                  href="/login"
+                  variant="text"
+                  size="large"
+                  sx={{
+                    fontSize: 20,
+                    fontWeight: "bold",
+                  }}
+                >
+                  zalogować
+                </Button>
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="h6" sx={{ mt: 10, mb: 2, fontSize: 22 }}>
+                Po zalogowaniu uzyskasz dostęp do:
+              </Typography>
+
+              <Grid item>
+                <Grid
+                  container
+                  direction="row"
+                  justifyContent="center"
+                  alignItems="start"
+                  spacing={2}
+                >
+                  <Grid item>
+                    <AssignmentIcon
+                      sx={{
+                        fontSize: 30,
+                      }}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Typography
+                      sx={{
+                        fontSize: 20,
+                      }}
+                    >
+                      Rozliczenia swojego pensum
+                    </Typography>
+                  </Grid>
+                </Grid>
               </Grid>
-              <Grid item >
-                <IconButton>
-                  <SearchIcon fontSize="large" />
-                </IconButton>
+              <Grid item>
+                <Grid
+                  container
+                  direction="row"
+                  justifyContent="center"
+                  alignItems="start"
+                  spacing={2}
+                >
+                  <Grid item>
+                    <GroupsIcon
+                      sx={{
+                        fontSize: 30,
+                      }}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Typography
+                      sx={{
+                        fontSize: 20,
+                      }}
+                    >
+                      Podglądu prowadzonych zajęć
+                    </Typography>
+                  </Grid>
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
-        </Grid>
+          </>
+        )}
+
         <Footer />
       </Grid>
     </Box>
