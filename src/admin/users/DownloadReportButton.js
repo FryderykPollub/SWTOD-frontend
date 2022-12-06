@@ -2,8 +2,11 @@ import { IconButton, Tooltip } from "@mui/material";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import React from "react";
 import { BASE_URL } from "../../util/globalVars";
+import { useLocalStorage } from "../../util/useLocalStorage";
 
 const DownloadReportButton = ({ id, name, surname }) => {
+  const [jwt, setJwt] = useLocalStorage("", "jwt");
+
   function sendRequest() {
     fetch(
       BASE_URL +
@@ -14,6 +17,7 @@ const DownloadReportButton = ({ id, name, surname }) => {
         headers: {
           "Content-Type": "application/csv",
         },
+        Authorization: `Bearer ${jwt}`,
       }
     )
       .then((response) => response.blob())
