@@ -1,18 +1,15 @@
 import {
   Alert,
   AlertTitle,
-  IconButton,
   Snackbar,
   TableCell,
   TableRow,
-  Tooltip,
   Typography,
 } from "@mui/material";
-
-import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import EditUserButton from "./EditUserButton";
 import React, { useState } from "react";
 import BlockUserButton from "./BlockUserButton";
+import DownloadReportButton from "./DownloadReportButton";
 
 const UserDetailsRow = ({
   id,
@@ -57,15 +54,7 @@ const UserDetailsRow = ({
             setInfoOpen={setInfoOpen}
             setReload={setReload}
           />
-          <Tooltip
-            title="Generuj kartę obciążeń"
-            placement="bottom"
-            enterDelay={500}
-          >
-            <IconButton>
-              <FileDownloadIcon />
-            </IconButton>
-          </Tooltip>
+          <DownloadReportButton id={id} name={name} surname={surname} />
           {isAdmin ? (
             <></>
           ) : (
